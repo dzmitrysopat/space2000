@@ -42,6 +42,7 @@ body{
         align-items: center;
         justify-content: center;
         flex-direction: column-reverse;
+        font-size: 140px;
     }
     .div2 { grid-area: 1 / 1 / 2 / 2; }
     .div3 { 
