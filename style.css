@@ -64,7 +64,7 @@ body{
         background-image: url('./img/ariel.png');
     }
     .div9 {grid-area: 1 / 8 / 2 / 9;
-        background-image: url('./img/casino.jfif');
+        background-image: url('./img/casino03.jpg');
     }
     .div10 { 
         grid-area: 2 / 8 / 3 / 9; 
@@ -91,12 +91,19 @@ body{
     .div25 { grid-area: 6 / 1 / 7 / 2; }
     .div26 { grid-area: 5 / 1 / 6 / 2; }
     .div27 { grid-area: 4 / 1 / 5 / 2; }
-    .div28 { grid-area: 3 / 1 / 4 / 2; }
+    .div28 { grid-area: 3 / 1 / 4 / 2; 
+        /* width: 193px; */
+        height: 225px;
+        background-image: url('./img/moon2.jfif');
+        /* background-size: no-repeat; */
+        /* background-position: center; */
+        background-size: cover;
+    }
     .div29 { grid-area: 2 / 1 / 3 / 2; }
 
     .fortuna,
     .astrolog{
-        width: 193px;
+        /* width: 193px; */
         height: 225px;
         background-image: url('./img/fortuna.jpg');
         /* background-size: no-repeat; */
