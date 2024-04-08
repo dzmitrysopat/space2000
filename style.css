@@ -133,12 +133,13 @@ article{
     .div28 { grid-area: 2 / 1 / 3 / 2; }
     .div29{
         grid-area: 2 / 2 / 8 / 8;
-        display: none;
+        display: block;
         flex-direction: column;
         color: #000;
         font-weight: 700;
         align-items: center;
         justify-content: center;
+        align-content: center;
 }
 
 section.parent > article{
@@ -169,6 +170,7 @@ div.price-block{
     width: 600px;
     height: 600px;
     display: flex;
+    position: relative;
 }
 
 .roulette-point{
@@ -256,4 +258,16 @@ article.astrologer:nth-child(11){
 .casino{
     background: url('./img/casino/casino04.jpeg') no-repeat center/160%;
     color: #fff;
+}
+
+.circle{
+    width: 200px;
+    height: 200px;
+    background-color: #004673;
+    border-radius: 50%;
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    color: #fff;
+    align-content: center;
 }
