@@ -4,7 +4,7 @@
 *{
     margin: 0;
     padding: 0;
-    /* outline: 2px solid lightgreen; */
+    outline: 2px solid lightgreen;
 }
 
 body{
@@ -137,8 +137,6 @@ article{
         flex-direction: column;
         color: #000;
         font-weight: 700;
-        align-items: center;
-        justify-content: center;
         align-content: center;
 }
 
@@ -158,55 +156,6 @@ section.parent > article{
 div.price-block{
     display: flex;
     justify-content: space-between;
-}
-
-.roulette{
-    text-transform: uppercase;
-    font-weight: 700;
-    text-align: center;
-    align-content: end;
-    border-radius: 50%;
-    border: 2px solid #004673;
-    width: 600px;
-    height: 600px;
-    display: flex;
-    position: relative;
-}
-
-.roulette-point{
-    opacity: 0.5;
-    background-color: #00a2ff;
-    border-left: 70px solid transparent;
-    border-right: 70px solid transparent;
-    border-top: 110px solid #2B2F6E;
-    border-bottom: 110px;
-    border-radius: 50%;
-    /* width: 0;  */
-    height: 50px;
-}
-
-.roulette-point > div.number{
-    background-color: #fff;
-    border-radius: 50%;
-    /* width: 25px; */
-    /* height: 25px; */
-    padding: 5px;
-    font-weight: 700;
-    text-align: center;
-    align-content: center;
-}
-
-.roulette-point > div.cash{
-    color: yellow;
-    border: none;
-}
-
-.roulette-point:nth-child(2)::before,
-.roulette-point:nth-child(4)::before,
-.roulette-point:nth-child(6)::before{
-    content: "*";
-    color: blueviolet;
-    font-size: 50px;
 }
 
 .fortuna{
@@ -260,14 +209,83 @@ article.astrologer:nth-child(11){
     color: #fff;
 }
 
-.circle{
-    width: 200px;
+/* .circle{ */
+    /* width: 200px;
     height: 200px;
     background-color: #004673;
     border-radius: 50%;
     position: absolute;
     top: 35%;
-    left: 35%;
+    left: 33%;
     color: #fff;
     align-content: center;
+} */
+
+.roulette{
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    /* border-radius: 50%; */
+    border: 2px solid #004673;
+    /* width: 600px; */
+    /* height: 600px; */
+    /* display: flex; */
+    /* position: absolute; */
+    /* top: 24%; */
+    /* left: 23%; */
 }
+
+.roulette-point{
+    opacity: 0.5;
+    width: 0; 
+    height: 0;
+    border-left: 70px solid transparent;
+    border-right: 70px solid transparent;
+    border-top: 110px solid #2B2F6E;
+    /* border-bottom: 110px; */
+    border-radius: 50%;
+}
+
+.roulette-point > div.number{
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    font-weight: 700;
+    text-align: center;
+    align-content: center;
+}
+
+.roulette-point > div.cash{
+    color: yellow;
+    border: none;
+}
+
+.roulette-point:nth-child(2)::before,
+.roulette-point:nth-child(4)::before,
+.roulette-point:nth-child(6)::before{
+    content: "*";
+    color: blueviolet;
+    font-size: 50px;
+}
+
+.roulette{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+    
+    .circle { grid-area: 3 / 3 / 5 / 5; }
+    .roulette-point:nth-child(2){ grid-area: 3 / 2 / 4 / 3; }
+    .roulette-point:nth-child(3) { grid-area: 2 / 2 / 3 / 3; }
+    .roulette-point:nth-child(4) { grid-area: 2 / 3 / 3 / 4; }
+    .roulette-point:nth-child(5) { grid-area: 2 / 4 / 3 / 5; }
+    .roulette-point:nth-child(6) { grid-area: 2 / 5 / 3 / 6; }
+    .roulette-point:nth-child(7) { grid-area: 3 / 5 / 4 / 6; }
+    .roulette-point:nth-child(8) { grid-area: 4 / 5 / 5 / 6; }
+    .roulette-point:nth-child(9) { grid-area: 5 / 5 / 6 / 6; }
+    .roulette-point:nth-child(10) { grid-area: 5 / 4 / 6 / 5; }
+    .roulette-point:nth-child(11) { grid-area: 5 / 3 / 6 / 4; }
+    .roulette-point:nth-child(12){ grid-area: 5 / 2 / 6 / 3; }
+    .roulette-point:nth-child(13) { grid-area: 4 / 2 / 5 / 3; }
