@@ -238,12 +238,13 @@ article.astrologer:nth-child(11){
 .roulette-point{
     opacity: 0.5;
     width: 0; 
-    height: 0;
+    height: 0px;
     border-left: 70px solid transparent;
     border-right: 70px solid transparent;
     border-top: 110px solid #2B2F6E;
-    /* border-bottom: 110px; */
-    border-radius: 50%;
+    border-bottom: 0px solid #004673;
+    /* border-radius: 50%; */
+    box-shadow: 15px 15px 0 0 #FEC712;
 }
 
 .roulette-point > div.number{
@@ -274,11 +275,32 @@ article.astrologer:nth-child(11){
     grid-template-rows: repeat(6, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+    position: relative;
 }
     
-    .circle { grid-area: 3 / 3 / 5 / 5; }
-    .roulette-point:nth-child(2){ grid-area: 3 / 2 / 4 / 3; }
-    .roulette-point:nth-child(3) { grid-area: 2 / 2 / 3 / 3; }
+    .circle{
+        grid-area: 3 / 3 / 5 / 5;
+        width: 200px;
+        height: 200px;
+        background-color: #004673;
+        border-radius: 50%;
+        top: 35%;
+        left: 33%;
+        color: #fff;
+        align-content: center;
+    }
+    .roulette-point:nth-child(2){
+        grid-area: 3 / 2 / 4 / 3;
+        transform: rotate(270deg);
+    }
+    .roulette-point:nth-child(3){
+        grid-area: 2 / 2 / 3 / 3;
+        transform: rotate(335deg);
+        position: absolute;
+        top: 62px;
+        left: 33px;
+}
+
     .roulette-point:nth-child(4) { grid-area: 2 / 3 / 3 / 4; }
     .roulette-point:nth-child(5) { grid-area: 2 / 4 / 3 / 5; }
     .roulette-point:nth-child(6) { grid-area: 2 / 5 / 3 / 6; }
