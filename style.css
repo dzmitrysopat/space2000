@@ -239,8 +239,8 @@ article.astrologer:nth-child(11){
     opacity: 0.5;
     width: 0px; 
     height: 0px;
-    border-left: 80px solid transparent;
-    border-right: 80px solid transparent;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
     border-top: 325px solid #0089ac;
     border-bottom: 0;
     border-radius: 10%;
@@ -337,14 +337,13 @@ article.astrologer:nth-child(11){
     left: -30%;
 }
 
-
 .roulette-point:nth-child(6){
     grid-area: 2 / 5 / 3 / 6;
     grid-area: 2 / 2 / 3 / 3;
     transform: rotate(48deg);
     position: absolute;
-    top: 60.5%;
-    right: -188%;
+    top: -10%;
+    right: -210%;
 }
 
 .roulette-point:nth-child(6) > div.cash,
@@ -354,10 +353,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(7){
     grid-area: 3 / 5 / 4 / 6;
-    transform: rotate(90deg);
+    transform: rotate(80deg);
     position: absolute;
-    left: -50%;
-    top: -5%;
+    left: -58%;
+    top: -58%;
 }
 
 .roulette-point:nth-child(7) > div.cash,
@@ -367,18 +366,23 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(8){
     grid-area: 4 / 5 / 5 / 6;
-    transform: rotate(133deg);
+    transform: rotate(110deg);
     position: absolute;
-    left: -112%;
-    top: -70.5%;
+    left: -60%;
+    top: -100%;
+}
+
+.roulette-point:nth-child(8) > div.cash,
+.roulette-point:nth-child(8) > div.number{
+    transform: rotate(-90deg);
 }
 
 .roulette-point:nth-child(9){
     grid-area: 5 / 5 / 6 / 6;
-    transform: rotate(120deg);
+    transform: rotate(135deg);
     position: absolute;
-    left: 50%;
-    top: -159%;
+    left: -90%;
+    top: -100%;
 }
 
 .roulette-point:nth-child(9) > div.cash,
@@ -388,10 +392,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(10){
     grid-area: 5 / 4 / 6 / 5;
-    transform: rotate(145deg);
+    transform: rotate(165deg);
     position: absolute;
-    left: -32%;
-    top: -155%;
+    left: -35%;
+    top: -70%;
 }
 
 .roulette-point:nth-child(10) > div.cash,
@@ -401,10 +405,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(11){
     grid-area: 5 / 3 / 6 / 4;
-    transform: rotate(-177deg);
+    transform: rotate(-165deg);
     position: absolute;
-    left: 5%;
-    top: -147%;
+    left: 10%;
+    top: -70%;
 }
 .roulette-point:nth-child(12){
     grid-area: 5 / 2 / 6 / 3;
