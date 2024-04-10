@@ -217,7 +217,7 @@ article.astrologer:nth-child(11){
     border-right: 125px solid transparent;
     border-top: 325px solid #0089ac;
     border-bottom: 0;
-    border-radius: 50%;
+    border-radius: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -271,43 +271,55 @@ article.astrologer:nth-child(11){
     border: 2px solid #004673;
 }
     
-    .circle{
-        grid-area: 3 / 3 / 5 / 5;
-        width: 300px;
-        height: 300px;
-        background-color: #004673;
-        border-radius: 50%;
-        color: #fff;
-        align-content: center;
-        font-size: 2.5rem;
-        z-index: 1;
-    }
+.circle{
+    grid-area: 3 / 3 / 5 / 5;
+    width: 300px;
+    height: 300px;
+    background-color: #004673;
+    border-radius: 50%;
+    color: #fff;
+    align-content: center;
+    font-size: 2.5rem;
+    z-index: 1;
+}
 
-    .roulette-point:nth-child(2){
-        grid-area: 3 / 2 / 4 / 3;
-        transform: rotate(-90deg);
-        position: absolute;
-        left: 15%;
-        top: -5%;
-    }
+.roulette-point:nth-child(2){
+    grid-area: 3 / 2 / 4 / 3;
+    transform: rotate(-90deg);
+    position: absolute;
+    left: 15%;
+    top: -5%;
+}
 
-    .roulette-point:nth-child(2) > div.cash,
-    .roulette-point:nth-child(2) > div.number{
-        transform: rotate(90deg);
-    }
+.roulette-point:nth-child(2) > div.cash,
+.roulette-point:nth-child(2) > div.number{
+    transform: rotate(90deg);
+}
 
-    .roulette-point:nth-child(3){
-        grid-area: 2 / 2 / 3 / 3;
-        transform: rotate(-35deg);
-        position: absolute;
-        top: 71%;
-        left: 31%;
-    }
+.roulette-point:nth-child(3){
+    grid-area: 2 / 2 / 3 / 3;
+    transform: rotate(-35deg);
+    position: absolute;
+    top: 71%;
+    left: 31%;
+}
 
     .roulette-point:nth-child(4) { grid-area: 2 / 3 / 3 / 4; }
     .roulette-point:nth-child(5) { grid-area: 2 / 4 / 3 / 5; }
     .roulette-point:nth-child(6) { grid-area: 2 / 5 / 3 / 6; }
-    .roulette-point:nth-child(7) { grid-area: 3 / 5 / 4 / 6; }
+
+.roulette-point:nth-child(7){
+    grid-area: 3 / 5 / 4 / 6;
+    transform: rotate(90deg);
+    position: absolute;
+    left: -95%;
+    top: -5%;
+}
+
+.roulette-point:nth-child(7) > div.cash,
+.roulette-point:nth-child(7) > div.number{
+    transform: rotate(-90deg);
+}
     .roulette-point:nth-child(8) { grid-area: 4 / 5 / 5 / 6; }
     .roulette-point:nth-child(9) { grid-area: 5 / 5 / 6 / 6; }
     .roulette-point:nth-child(10) { grid-area: 5 / 4 / 6 / 5; }
