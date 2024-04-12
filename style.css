@@ -20,8 +20,9 @@ body{
 }
 
 article{
-    border: 2px solid #004673;
+    border: 5px solid #0089ac;
 }
+
 .parent {
     display: grid;
     grid-template-columns: repeat(8, 175px);
@@ -219,7 +220,6 @@ article.astrologer:nth-child(11){
     text-transform: uppercase;
     font-weight: 700;
     text-align: center;
-    border: 2px solid #004673;
 }
 
 .circle{
@@ -239,8 +239,8 @@ article.astrologer:nth-child(11){
     opacity: 0.5;
     width: 0px; 
     height: 0px;
-    border-left: 90px solid transparent;
-    border-right: 90px solid transparent;
+    border-left: 95px solid transparent;
+    border-right: 95px solid transparent;
     border-top: 325px solid #0089ac;
     border-bottom: 0;
     border-radius: 10%;
@@ -280,22 +280,22 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(2)::after,
 .roulette-point:nth-child(4)::after,
-.roulette-point:nth-child(6)::before{
+.roulette-point:nth-child(6)::after{
     content: "*";
     color: blueviolet;
     font-size: 50px;
     position: absolute;
-    top: 0px;
-    left: 5px;
+    top: 00px;
+    left: 300px;
     z-index: 5;
 }
 
 .roulette-point:nth-child(2){
     grid-area: 3 / 2 / 4 / 3;
-    transform: rotate(-75deg);
+    transform: rotate(-74deg);
     position: absolute;
     left: 10%;
-    top: -25%;
+    top: -40%;
 }
 
 .roulette-point:nth-child(2) > div.cash,
@@ -307,8 +307,8 @@ article.astrologer:nth-child(11){
     grid-area: 2 / 2 / 3 / 3;
     transform: rotate(-40deg);
     position: absolute;
-    top: 55%;
-    left: 50%;
+    top: 2%;
+    left: 42%;
 }
 
 .roulette-point:nth-child(3) > div.cash,
@@ -318,10 +318,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(4){
     grid-area: 2 / 3 / 3 / 4;
-    transform: rotate(-15deg);
+    transform: rotate(-18deg);
     position: absolute;
     top: -40%;
-    left: 15%;
+    left: 0%;
 }
 
 .roulette-point:nth-child(4) > div.cash,
@@ -331,10 +331,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(5){
     grid-area: 2 / 4 / 3 / 5;
-    transform: rotate(15deg);
+    transform: rotate(17deg);
     position: absolute;
     top: -40%;
-    left: -30%;
+    left: -35%;
 }
 
 .roulette-point:nth-child(6){
@@ -353,10 +353,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(7){
     grid-area: 3 / 5 / 4 / 6;
-    transform: rotate(80deg);
+    transform: rotate(75deg);
     position: absolute;
-    left: -58%;
-    top: -58%;
+    left: -60%;
+    top: -40%;
 }
 
 .roulette-point:nth-child(7) > div.cash,
@@ -369,7 +369,7 @@ article.astrologer:nth-child(11){
     transform: rotate(110deg);
     position: absolute;
     left: -60%;
-    top: -100%;
+    top: -70%;
 }
 
 .roulette-point:nth-child(8) > div.cash,
@@ -392,7 +392,7 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(10){
     grid-area: 5 / 4 / 6 / 5;
-    transform: rotate(165deg);
+    transform: rotate(160deg);
     position: absolute;
     left: -35%;
     top: -70%;
@@ -407,15 +407,16 @@ article.astrologer:nth-child(11){
     grid-area: 5 / 3 / 6 / 4;
     transform: rotate(-165deg);
     position: absolute;
-    left: 10%;
+    left: 5%;
     top: -70%;
 }
+
 .roulette-point:nth-child(12){
     grid-area: 5 / 2 / 6 / 3;
-    transform: rotate(-142deg);
+    transform: rotate(-135deg);
     position: absolute;
     left: 45%;
-    top: -159%;
+    top: -105%;
 }
 
 .roulette-point > div.cash,
@@ -425,10 +426,10 @@ article.astrologer:nth-child(11){
 
 .roulette-point:nth-child(13){
     grid-area: 4 / 2 / 5 / 3;
-    transform: rotate(-110deg);
+    transform: rotate(-108deg);
     position: absolute;
-    left: 10%;
-    top: -80%;
+    left: 12%;
+    top: -72%;
 }
 
 .roulette-point:nth-child(13) > div.cash,
