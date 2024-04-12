@@ -334,7 +334,7 @@ article.astrologer:nth-child(11){
     transform: rotate(17deg);
     position: absolute;
     top: -40%;
-    left: -35%;
+    left: -40%;
 }
 
 .roulette-point:nth-child(6){
@@ -355,8 +355,8 @@ article.astrologer:nth-child(11){
     grid-area: 3 / 5 / 4 / 6;
     transform: rotate(75deg);
     position: absolute;
-    left: -60%;
-    top: -40%;
+    left: -50%;
+    top: -35%;
 }
 
 .roulette-point:nth-child(7) > div.cash,
@@ -368,7 +368,7 @@ article.astrologer:nth-child(11){
     grid-area: 4 / 5 / 5 / 6;
     transform: rotate(110deg);
     position: absolute;
-    left: -60%;
+    left: -50%;
     top: -70%;
 }
 
