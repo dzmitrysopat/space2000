@@ -222,6 +222,11 @@ article.astrologer:nth-child(11){
     text-transform: uppercase;
     font-weight: 700;
     text-align: center;
+    width: 800px;
+    height: 800px;
+    /* background-color: #b8b8b8; */
+    border-radius: 50%;
+    border: 15px solid #004673;
 }
 
 .circle{
