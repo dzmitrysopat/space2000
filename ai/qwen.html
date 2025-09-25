@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Космос 2000 — Настольная игра</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://i.imgur.com/5z9WYbH.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .game-board {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 40px 20px;
+    }
+
+    /* Центральное колесо */
+    .wheel-container {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      margin: 60px auto;
+      transform: rotate(-30deg);
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4a90e2, #6ac5ff);
+      box-shadow: 0 0 30px rgba(0, 120, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wheel-sector {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      transform-origin: bottom right;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+      color: #ffd700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .sector-1 { transform: rotate(0deg) skewY(-30deg); }
+    .sector-2 { transform: rotate(30deg) skewY(-30deg); }
+    .sector-3 { transform: rotate(60deg) skewY(-30deg); }
+    .sector-4 { transform: rotate(90deg) skewY(-30deg); }
+    .sector-5 { transform: rotate(120deg) skewY(-30deg); }
+    .sector-6 { transform: rotate(150deg) skewY(-30deg); }
+    .sector-7 { transform: rotate(180deg) skewY(-30deg); }
+    .sector-8 { transform: rotate(210deg) skewY(-30deg); }
+    .sector-9 { transform: rotate(240deg) skewY(-30deg); }
+    .sector-10 { transform: rotate(270deg) skewY(-30deg); }
+    .sector-11 { transform: rotate(300deg) skewY(-30deg); }
+    .sector-12 { transform: rotate(330deg) skewY(-30deg); }
+
+    .wheel-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, #ff6b6b, #ff9e4f);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 5px black;
+      z-index: 10;
+    }
+
+    .wheel-numbers {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .wheel-number {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: white;
+      color: black;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+
+    .num-1 { top: 20%; left: 75%; }
+    .num-2 { top: 35%; left: 85%; }
+    .num-3 { top: 50%; left: 90%; }
+    .num-4 { top: 65%; left: 85%; }
+    .num-5 { top: 80%; left: 75%; }
+    .num-6 { top: 85%; left: 50%; }
+    .num-7 { top: 80%; left: 25%; }
+    .num-8 { top: 65%; left: 15%; }
+    .num-9 { top: 50%; left: 10%; }
+    .num-10 { top: 35%; left: 15%; }
+    .num-11 { top: 20%; left: 25%; }
+    .num-12 { top: 10%; left: 50%; }
+
+    /* Заголовки зон */
+    .zone-title {
+      position: absolute;
+      font-size: 32px;
+      font-weight: bold;
+      color: #ff00ff;
+      text-shadow: 0 0 10px #000;
+      transform: rotate(-90deg);
+      background: rgba(0,0,0,0.7);
+      padding: 10px 20px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .start-title {
+      top: 10%;
+      left: 5%;
+      transform: rotate(0deg);
+      color: #ff66ff;
+    }
+
+    .casino-title {
+      top: 10%;
+      right: 5%;
+      transform: rotate(0deg);
+      color: #ff00ff;
+    }
+
+    .police-title {
+      bottom: 10%;
+      left: 5%;
+      transform: rotate(0deg);
+      color: #ff00ff;
+    }
+
+    .pirates-title {
+      bottom: 10%;
+      right: 5%;
+      transform: rotate(0deg);
+      color: #ff00ff;
+    }
+
+    /* Карточки вокруг доски */
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .card {
+      width: 150px;
+      height: 200px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.7);
+      padding: 5px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .card-value {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255,255,255,0.8);
+      color: black;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Специальные зоны */
+    .special-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .special-card {
+      width: 100px;
+      height: 150px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid #ff00ff;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .special-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .special-card .card-label {
+      font-size: 12px;
+    }
+
+    /* Логотип */
+    .logo {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-size: 60px;
+      font-weight: bold;
+      color: #00ffff;
+      text-shadow: 0 0 15px #00ffff;
+      letter-spacing: 5px;
+      z-index: 5;
+    }
+
+    /* Корабли */
+    .spaceship {
+      position: absolute;
+      width: 300px;
+      height: 100px;
+      background: url('https://i.imgur.com/5z9WYbH.jpg') no-repeat center center;
+      background-size: contain;
+      opacity: 0.8;
+      z-index: 1;
+    }
+
+    .spaceship-top {
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .spaceship-bottom {
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+    }
+
+    /* Астронавты */
+    .astronauts {
+      position: absolute;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .astronaut {
+      width: 80px;
+      height: 120px;
+      background: url('https://i.imgur.com/5z9WYbH.jpg') no-repeat center center;
+      background-size: contain;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 800px) {
+      .wheel-container { width: 300px; height: 300px; }
+      .wheel-sector { font-size: 16px; }
+      .card { width: 120px; height: 160px; }
+      .logo { font-size: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-board">
+
+    <!-- Заголовки -->
+    <div class="start-title zone-title">СТАРТ</div>
+    <div class="casino-title zone-title">КАЗИНО</div>
+    <div class="police-title zone-title">ПОЛИЦИЯ</div>
+    <div class="pirates-title zone-title">ПИРАТЫ</div>
+
+    <!-- Логотип -->
+    <div class="logo">КОСМОС 2000</div>
+
+    <!-- Корабли -->
+    <div class="spaceship spaceship-top"></div>
+    <div class="spaceship spaceship-bottom"></div>
+
+    <!-- Астронавты -->
+    <div class="astronauts">
+      <div class="astronaut"></div>
+      <div class="astronaut"></div>
+    </div>
+
+    <!-- Центральное колесо -->
+    <div class="wheel-container">
+      <div class="wheel">
+        <div class="wheel-sector sector-1">+100</div>
+        <div class="wheel-sector sector-2">+200</div>
+        <div class="wheel-sector sector-3">-150</div>
+        <div class="wheel-sector sector-4">+150</div>
+        <div class="wheel-sector sector-5">-50</div>
+        <div class="wheel-sector sector-6">+200</div>
+        <div class="wheel-sector sector-7">+150</div>
+        <div class="wheel-sector sector-8">-300</div>
+        <div class="wheel-sector sector-9">+400</div>
+        <div class="wheel-sector sector-10">-100</div>
+        <div class="wheel-sector sector-11">+500</div>
+        <div class="wheel-sector sector-12">+200</div>
+
+        <div class="wheel-center">SPACE 2000</div>
+
+        <div class="wheel-numbers">
+          <div class="wheel-number num-1">1</div>
+          <div class="wheel-number num-2">2</div>
+          <div class="wheel-number num-3">3</div>
+          <div class="wheel-number num-4">4</div>
+          <div class="wheel-number num-5">5</div>
+          <div class="wheel-number num-6">6</div>
+          <div class="wheel-number num-7">7</div>
+          <div class="wheel-number num-8">8</div>
+          <div class="wheel-number num-9">9</div>
+          <div class="wheel-number num-10">10</div>
+          <div class="wheel-number num-11">11</div>
+          <div class="wheel-number num-12">12</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Верхний ряд карт -->
+    <div class="card-row">
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Старт">
+        <div class="card-label">СТАРТ</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Меркурий">
+        <div class="card-label">МЕРКУРИЙ</div>
+        <div class="card-value">100</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Страховое агентство">
+        <div class="card-label">СТРАХОВОЕ АГЕНТСТВО</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Фортуна">
+        <div class="card-label">ФОРТУНА</div>
+        <div class="card-value">100</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Лед">
+        <div class="card-label">ЛЕД</div>
+        <div class="card-value">150</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Гермес">
+        <div class="card-label">ГЕРМЕС</div>
+        <div class="card-value">200</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Аркань">
+        <div class="card-label">АРКАНЬ</div>
+        <div class="card-value">300</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Казино">
+        <div class="card-label">КАЗИНО</div>
+        <div class="card-value">50</div>
+      </div>
+    </div>
+
+    <!-- Правый столбец -->
+    <div class="special-zone">
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Чёрная Дыра">
+        <div class="card-label">ЧЁРНАЯ ДЫРА</div>
+        <div class="card-value">500</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Плутон">
+        <div class="card-label">ПЛУТОН</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Астролог">
+        <div class="card-label">АСТРОЛОГ</div>
+        <div class="card-value">500</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Цера">
+        <div class="card-label">ЦЕРА</div>
+        <div class="card-value">600</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Фортуна">
+        <div class="card-label">ФОРТУНА</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Сатурн 3">
+        <div class="card-label">САТУРН 3</div>
+        <div class="card-value">350</div>
+      </div>
+    </div>
+
+    <!-- Левый столбец -->
+    <div class="special-zone" style="align-items: flex-start;">
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Фортуна">
+        <div class="card-label">ФОРТУНА</div>
+        <div class="card-value">100</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Луна 2">
+        <div class="card-label">ЛУНА 2</div>
+        <div class="card-value">400</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Вега">
+        <div class="card-label">ВЕГА</div>
+        <div class="card-value">500</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Астролог">
+        <div class="card-label">АСТРОЛОГ</div>
+        <div class="card-value">500</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Титан 4">
+        <div class="card-label">ТИТАН 4</div>
+        <div class="card-value">650</div>
+      </div>
+      <div class="special-card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Фобос">
+        <div class="card-label">ФОБОС</div>
+        <div class="card-value">700</div>
+      </div>
+    </div>
+
+    <!-- Нижний ряд -->
+    <div class="card-row">
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Полиция">
+        <div class="card-label">ПОЛИЦИЯ</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Нептун 5">
+        <div class="card-label">НЕПТУН 5</div>
+        <div class="card-value">450</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Чёрная Дыра">
+        <div class="card-label">ЧЁРНАЯ ДЫРА</div>
+        <div class="card-value">500</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Марс">
+        <div class="card-label">МАРС</div>
+        <div class="card-value">550</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Фортуна">
+        <div class="card-label">ФОРТУНА</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Уран">
+        <div class="card-label">УРАН</div>
+        <div class="card-value">50</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Страховое агентство">
+        <div class="card-label">СТРАХОВОЕ АГЕНТСТВО</div>
+        <div class="card-value">250</div>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/5z9WYbH.jpg" alt="Пираты">
+        <div class="card-label">ПИРАТЫ</div>
+        <div class="card-value">100</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
