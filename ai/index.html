@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Космос 2000 — вёрстка поля (HTML/CSS)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board-size: 920px;      /* поменяй размер всей доски */
+    --edge-card-size: 80px;   /* размер каждой маленькой карточки по краю */
+    --gutter: 12px;
+    --center-size: 560px;     /* размер круглого центрального колеса */
+    --accent: #f0c24a;
+    --bg-dark: #071022;
+  }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient( circle at 10% 10%, #0e1b2a 0%, #071022 30%, #041124 100% );
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:#fff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:20px;
+  }
+
+  /* Контейнер доски */
+  .board {
+    width: var(--board-size);
+    height: var(--board-size);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+    display:grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--gutter);
+    padding: var(--gutter);
+    position:relative;
+    overflow:hidden;
+    background-image: radial-gradient(circle at center, rgba(255,255,255,0.02) 0, transparent 30%);
+  }
+
+  /* Верхняя панель карточек */
+  .edge.top, .edge.bottom {
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+  }
+  .edge.left, .edge.right {
+    display:flex;
+    gap:10px;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+  }
+
+  /* Разметка ячеек грида */
+  .corner.top-left    { grid-column: 1; grid-row: 1; display:flex; align-items:center; justify-content:center; }
+  .top                { grid-column: 2; grid-row: 1; }
+  .corner.top-right   { grid-column: 3; grid-row: 1; display:flex; align-items:center; justify-content:center; }
+  .left               { grid-column: 1; grid-row: 2; }
+  .center             { grid-column: 2; grid-row: 2; display:flex; align-items:center; justify-content:center; }
+  .right              { grid-column: 3; grid-row: 2; }
+  .corner.bottom-left { grid-column: 1; grid-row: 3; display:flex; align-items:center; justify-content:center; }
+  .bottom             { grid-column: 2; grid-row: 3; }
+  .corner.bottom-right{ grid-column: 3; grid-row: 3; display:flex; align-items:center; justify-content:center; }
+
+  /* маленькая карточка (по краю) */
+  .card {
+    width: var(--edge-card-size);
+    height: calc(var(--edge-card-size) * 1.3);
+    background: linear-gradient(180deg,#1a2431,#0f1a26);
+    border-radius:6px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:6px;
+    font-size:12px;
+    color:#ffd;
+    border: 2px solid rgba(255,255,255,0.04);
+    transform-origin:center;
+  }
+
+  /* угловые большие карточки (стар/попытка и т.п.) */
+  .corner .card {
+    width: calc(var(--edge-card-size) * 1.6);
+    height: calc(var(--edge-card-size) * 1.6);
+    font-weight:700;
+    background: linear-gradient(180deg,#ffb7b7,#f3d6b0);
+    color:#1b1b1b;
+  }
+
+  /* Внешний текст заголовка */
+  .title {
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom: 26px;
+    font-size:72px;
+    font-weight:900;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color: #ffffff;
+    background: linear-gradient(90deg,#fff 0%, #b6e0ff 40%, #8ac6ff 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.7);
+    pointer-events:none;
+  }
+
+  /* Центральное колесо */
+  .wheel {
+    width: var(--center-size);
+    height: var(--center-size);
+    border-radius:50%;
+    position:relative;
+    background:
+      radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 35%),
+      conic-gradient(#0f5fa6 0deg, #1c78c2 30deg, #0f5fa6 30deg, #1c78c2 60deg, #0f5fa6 60deg, #1c78c2 90deg,
+                     #0f5fa6 90deg, #1c78c2 120deg, #0f5fa6 120deg, #1c78c2 150deg, #0f5fa6 150deg, #1c78c2 180deg,
+                     #0f5fa6 180deg, #1c78c2 210deg, #0f5fa6 210deg, #1c78c2 240deg, #0f5fa6 240deg, #1c78c2 270deg,
+                     #0f5fa6 270deg, #1c78c2 300deg, #0f5fa6 300deg, #1c78c2 330deg, #0f5fa6 330deg, #1c78c2 360deg);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.6), inset 0 6px 12px rgba(255,255,255,0.02);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* внутренний круг с логотипом */
+  .wheel .hub {
+    width: 36%;
+    height: 36%;
+    border-radius:50%;
+    background: radial-gradient(circle at 40% 30%, #ffefc3 0%, #ffb26a 50%, #e04b4b 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#111;
+    font-weight:800;
+    text-transform:uppercase;
+    font-size:20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5), inset 0 4px 10px rgba(255,255,255,0.15);
+    text-align:center;
+    padding:6px;
+  }
+
+  /* цифры и значки по сектору
+     мы имеем 12 спанов-меток; каждый поворачивается на свой угол
+  */
+  .slice {
+    --i: 0; /* индекс от 0 до 11 */
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin: center;
+    transform: rotate(calc(var(--i) * 30deg)) translate(-50%, -50%);
+    width:100%;
+    height:100%;
+    pointer-events:none;
+  }
+  .slice .label {
+    position:absolute;
+    left:50%;
+    top:6%;
+    transform: translate(-50%, 0) rotate(calc(-1 * var(--i) * 30deg));
+    font-weight:700;
+    font-size:20px;
+    color:#ffd;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.18);
+    padding:6px 10px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.04);
+  }
+
+  /* маленькие маркеры номеров внутри секторов (круглые) */
+  .slice .num {
+    position:absolute;
+    left:50%;
+    top:36%;
+    transform: translate(-50%, 0) rotate(calc(-1 * var(--i) * 30deg));
+    width:36px;height:36px;
+    border-radius:50%;
+    background: linear-gradient(180deg,#ffeaa9,#ffd06a);
+    color:#111;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.45);
+    border:2px solid rgba(255,255,255,0.15);
+  }
+
+  /* дополнительные декоративные элементы (ракеты) */
+  .rocket {
+    position:absolute;
+    width:120px;
+    height:28px;
+    background: linear-gradient(90deg,#c9d8ff,#7aa9ff);
+    top: calc(50% - 14px);
+    left: -18px;
+    transform: rotate(0deg);
+    border-radius:8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    display:flex;align-items:center;justify-content:center;
+    color:#052033;font-weight:700;
+    font-size:14px;
+    opacity:0.95;
+  }
+  .rocket.right { left: auto; right: -18px; transform: scaleX(-1); }
+
+  /* подписи START / ПОПЫТКА */
+  .corner .small-title {
+    position:absolute;
+    bottom:8px;
+    left:8px;
+    font-weight:900;
+    font-size:18px;
+    text-transform:uppercase;
+    color:#ffdbf0;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  }
+
+  /* адаптив: уменьшаем всё при малой ширине экрана */
+  @media (max-width:1000px){
+    :root{
+      --board-size: 720px;
+      --center-size: 430px;
+      --edge-card-size: 60px;
+    }
+  }
+  @media (max-width:680px){
+    body { padding:10px; }
+    :root{
+      --board-size: 560px;
+      --center-size: 340px;
+      --edge-card-size: 48px;
+    }
+    .title { font-size:40px; bottom:14px; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="board" role="region" aria-label="Поле игры Космос 2000">
+
+  <!-- верхняя левая угловая карточка -->
+  <div class="corner top-left">
+    <div class="card" style="background:linear-gradient(180deg,#ffb7b7,#f3d6b0);">
+      <div style="font-size:14px">Старт</div>
+      <div style="font-size:24px;font-weight:900;margin-top:4px">250</div>
+    </div>
+  </div>
+
+  <!-- верхняя крайняя полоса карточек -->
+  <div class="top edge">
+    <!-- 9 карточек сверху (пример) -->
+    <div class="card">Титан 4<br><small>650</small></div>
+    <div class="card">Фобос<br><small>700</small></div>
+    <div class="card">Астролог<br><small>100</small></div>
+    <div class="card">Вега<br><small>500</small></div>
+    <div class="card">Луна 2<br><small>400</small></div>
+    <div class="card">Фортуна<br><small>––</small></div>
+    <div class="card">Попытка<br><small>250</small></div>
+  </div>
+
+  <!-- верхняя правая угловая карточка -->
+  <div class="corner top-right">
+    <div class="card" style="background:linear-gradient(180deg,#bfe6ff,#dcefff);">
+      <div style="font-size:12px">ПОЛИЦИЯ</div>
+      <div style="font-size:20px;font-weight:900;margin-top:4px">250</div>
+    </div>
+  </div>
+
+  <!-- левая сторона -->
+  <div class="left edge">
+    <div class="card">Меркурий<br><small>100</small></div>
+    <div class="card">Агентство<br><small>100–250</small></div>
+    <div class="card">Фортуна<br><small>—</small></div>
+    <div class="card">Луна<br><small>150</small></div>
+    <div class="card">Гермес<br><small>200</small></div>
+  </div>
+
+  <!-- центр с колесом -->
+  <div class="center">
+    <div class="wheel" role="img" aria-label="Центральное колесо очков">
+      <div class="hub">SPACE 2000</div>
+
+      <!-- декоративные ракеты слева/справа -->
+      <div class="rocket" aria-hidden="true">Космическая линия</div>
+      <div class="rocket right" aria-hidden="true">Космическая линия</div>
+
+      <!-- 12 секторов (i от 0 до 11). Меняй текст в data-label и data-num -->
+      <!-- в реальной версии можно генерировать JS; тут — статично для примера -->
+      <div class="slice" style="--i:0"><div class="label">+100</div><div class="num">1</div></div>
+      <div class="slice" style="--i:1"><div class="label">+150</div><div class="num">2</div></div>
+      <div class="slice" style="--i:2"><div class="label">+50</div><div class="num">3</div></div>
+      <div class="slice" style="--i:3"><div class="label">-50</div><div class="num">4</div></div>
+      <div class="slice" style="--i:4"><div class="label">+200</div><div class="num">5</div></div>
+      <div class="slice" style="--i:5"><div class="label">+150</div><div class="num">6</div></div>
+      <div class="slice" style="--i:6"><div class="label">-300</div><div class="num">7</div></div>
+      <div class="slice" style="--i:7"><div class="label">+400</div><div class="num">8</div></div>
+      <div class="slice" style="--i:8"><div class="label">-100</div><div class="num">9</div></div>
+      <div class="slice" style="--i:9"><div class="label">+500</div><div class="num">10</div></div>
+      <div class="slice" style="--i:10"><div class="label">+200</div><div class="num">11</div></div>
+      <div class="slice" style="--i:11"><div class="label">+150</div><div class="num">12</div></div>
+    </div>
+  </div>
+
+  <!-- правая сторона -->
+  <div class="right edge">
+    <div class="card">Нептун 5<br><small>450</small></div>
+    <div class="card">Чёрная дыра<br><small>500</small></div>
+    <div class="card">Марс<br><small>550</small></div>
+    <div class="card">Фортуна<br><small>—</small></div>
+    <div class="card">Уран<br><small>50</small></div>
+  </div>
+
+  <!-- нижняя левая угловая карточка -->
+  <div class="corner bottom-left">
+    <div class="card" style="background:linear-gradient(180deg,#c8fbe0,#b0f0c9);">
+      <div style="font-size:14px">START</div>
+      <div style="font-size:24px;font-weight:900;margin-top:4px">250</div>
+      <div class="small-title">СТАРТ</div>
+    </div>
+  </div>
+
+  <!-- нижняя полоса -->
+  <div class="bottom edge">
+    <div class="card">Фортуна<br><small>—</small></div>
+    <div class="card">Луна 2<br><small>400</small></div>
+    <div class="card">Вега<br><small>500</small></div>
+    <div class="card">Астролог<br><small>100</small></div>
+    <div class="card">Титан<br><small>650</small></div>
+    <div class="card">Фобос<br><small>700</small></div>
+    <div class="card">Попытка<br><small>—</small></div>
+  </div>
+
+  <!-- нижняя правая уголка -->
+  <div class="corner bottom-right">
+    <div class="card" style="background:linear-gradient(180deg,#dfe3ff,#c9d6ff);">
+      <div style="font-size:14px">Попытка</div>
+      <div style="font-size:20px;font-weight:900;margin-top:4px">250</div>
+    </div>
+  </div>
+
+  <div class="title">Космос 2000</div>
+</div>
+
+</body>
+</html>
