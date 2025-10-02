@@ -250,6 +250,14 @@ article.astrologer:nth-child(11){
     position: relative;
     transition: all 0.4s;
     cursor: default;
+        --i: 0; /* индекс от 0 до 11 */
+    left:50%;
+    top:50%;
+    transform-origin: center;
+    transform: rotate(calc(var(--i) * 30deg)) translate(-50%, -50%);
+    /* width:100%;
+    height:100%; */
+    pointer-events:none;
 }
 
 .roulette-point:hover{
