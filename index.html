@@ -1,231 +1,1138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="shortcut icon" href="./img/rocket.512.png" type="image/x-icon">
-    <title>Космос 2000</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КОСМОС 2000 — Online</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+:root {
+  --space-black:#050a14;--deep-blue:#0a1628;--cosmos-blue:#0d2144;
+  --star-silver:#c8d8f0;--nebula-purple:#3d1a6e;--asteroid-orange:#e87d2a;
+  --planet-gold:#f5c518;--green-neon:#39ff8f;--red-danger:#ff3b30;
+  --fortune-cyan:#00d4ff;--astro-violet:#9b59ff;--insurance-teal:#20b2aa;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--space-black);color:var(--star-silver);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:
+  radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.8) 0%,transparent 100%),
+  radial-gradient(1px 1px at 25% 40%,rgba(200,216,240,.6) 0%,transparent 100%),
+  radial-gradient(2px 2px at 40% 10%,rgba(255,255,255,.7) 0%,transparent 100%),
+  radial-gradient(1px 1px at 55% 70%,rgba(255,255,255,.5) 0%,transparent 100%),
+  radial-gradient(1px 1px at 70% 25%,rgba(200,216,240,.8) 0%,transparent 100%),
+  radial-gradient(2px 2px at 85% 55%,rgba(255,255,255,.6) 0%,transparent 100%),
+  radial-gradient(1px 1px at 15% 85%,rgba(200,216,240,.7) 0%,transparent 100%),
+  radial-gradient(1px 1px at 60% 45%,rgba(255,255,255,.3) 0%,transparent 100%),
+  radial-gradient(1px 1px at 78% 12%,rgba(200,216,240,.6) 0%,transparent 100%);
+  pointer-events:none;z-index:0;}
+.screen{display:none;position:relative;z-index:1;}
+.screen.active{display:flex;flex-direction:column;min-height:100vh;}
+
+/* CONFIG SCREEN */
+#config{align-items:center;justify-content:center;padding:20px;}
+.config-card{background:linear-gradient(135deg,rgba(13,33,68,.95),rgba(61,26,110,.6));border:1px solid rgba(200,216,240,.2);border-radius:16px;padding:28px;width:100%;max-width:500px;backdrop-filter:blur(10px);}
+.logo-title{font-family:'Orbitron',monospace;font-size:clamp(1.6rem,6vw,3.2rem);font-weight:900;background:linear-gradient(135deg,var(--planet-gold),var(--asteroid-orange),var(--fortune-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:4px;line-height:1.1;text-align:center;margin-bottom:4px;}
+.logo-sub{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--fortune-cyan);letter-spacing:6px;text-align:center;margin-bottom:24px;opacity:.8;}
+.config-warning{background:rgba(232,125,42,.1);border:1px solid rgba(232,125,42,.4);border-radius:8px;padding:12px 16px;font-size:.8rem;color:var(--asteroid-orange);margin-bottom:20px;line-height:1.5;}
+.config-warning code{background:rgba(0,0,0,.4);padding:2px 6px;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--planet-gold);}
+.section-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--fortune-cyan);letter-spacing:3px;margin-bottom:6px;text-transform:uppercase;}
+.input-field{width:100%;padding:11px 14px;background:rgba(5,10,20,.8);border:1px solid rgba(200,216,240,.25);border-radius:8px;color:var(--star-silver);font-family:'Rajdhani',sans-serif;font-size:.95rem;margin-bottom:14px;outline:none;transition:border-color .3s;}
+.input-field:focus{border-color:var(--fortune-cyan);}
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,var(--asteroid-orange),var(--planet-gold));border:none;border-radius:10px;color:var(--space-black);font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s;margin-top:4px;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,125,42,.4);}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-secondary{width:100%;padding:11px;background:transparent;border:1px solid rgba(200,216,240,.3);border-radius:10px;color:var(--star-silver);font-family:'Orbitron',monospace;font-size:.75rem;letter-spacing:2px;cursor:pointer;transition:all .3s;margin-top:6px;}
+.btn-secondary:hover{border-color:var(--fortune-cyan);color:var(--fortune-cyan);}
+.tabs{display:flex;gap:0;margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid rgba(200,216,240,.2);}
+.tab{flex:1;padding:11px;background:transparent;border:none;color:rgba(200,216,240,.5);font-family:'Orbitron',monospace;font-size:.7rem;cursor:pointer;transition:all .3s;letter-spacing:1px;}
+.tab.active{background:linear-gradient(135deg,var(--asteroid-orange),var(--planet-gold));color:var(--space-black);font-weight:700;}
+.tab-content{display:none;}.tab-content.active{display:block;}
+.player-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:9px;background:rgba(5,10,20,.5);border-radius:8px;border:1px solid rgba(200,216,240,.1);}
+.player-color-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
+.player-name-input{flex:1;padding:7px 11px;background:rgba(5,10,20,.8);border:1px solid rgba(200,216,240,.2);border-radius:6px;color:var(--star-silver);font-family:'Rajdhani',sans-serif;font-size:.9rem;outline:none;}
+.count-row{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
+.count-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(200,216,240,.3);background:transparent;color:var(--star-silver);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.count-btn:hover{background:rgba(200,216,240,.1);}
+.room-code-box{background:rgba(5,10,20,.8);border:1px solid var(--planet-gold);border-radius:8px;padding:14px;text-align:center;margin:12px 0;}
+.room-code{font-family:'Orbitron',monospace;font-size:2.2rem;color:var(--planet-gold);letter-spacing:10px;}
+.room-hint{font-size:.7rem;color:rgba(200,216,240,.5);margin-top:5px;}
+.waiting-list{margin:12px 0;}
+.waiting-player{display:flex;align-items:center;gap:10px;padding:9px;background:rgba(57,255,143,.05);border:1px solid rgba(57,255,143,.2);border-radius:8px;margin-bottom:6px;font-size:.85rem;}
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green-neon);margin-right:6px;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.connecting-overlay{position:fixed;inset:0;background:rgba(5,10,20,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;display:none;}
+.connecting-overlay.active{display:flex;}
+.spinner{width:50px;height:50px;border:3px solid rgba(200,216,240,.2);border-top-color:var(--fortune-cyan);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.connecting-text{font-family:'Orbitron',monospace;font-size:.9rem;color:var(--fortune-cyan);letter-spacing:2px;}
+
+/* GAME SCREEN */
+#game{flex-direction:column;padding:0;}
+.game-topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(10,22,40,.96);border-bottom:1px solid rgba(200,216,240,.15);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px;}
+.game-title-small{font-family:'Orbitron',monospace;font-size:.75rem;color:var(--planet-gold);letter-spacing:2px;}
+.turn-indicator{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--fortune-cyan);text-align:center;}
+.online-badge{font-size:.65rem;background:rgba(57,255,143,.15);border:1px solid rgba(57,255,143,.4);border-radius:4px;padding:2px 8px;color:var(--green-neon);font-family:'Share Tech Mono',monospace;}
+.game-layout{display:grid;grid-template-columns:1fr 275px;flex:1;min-height:0;}
+@media(max-width:900px){.game-layout{grid-template-columns:1fr;}}
+.board-container{padding:10px;display:flex;align-items:center;justify-content:center;min-height:0;overflow:hidden;}
+.board-wrapper{position:relative;width:100%;max-width:min(calc(100vh - 120px),calc(100vw - 295px));aspect-ratio:1;}
+@media(max-width:900px){.board-wrapper{max-width:min(calc(100vw - 20px),500px);}}
+.board-svg{width:100%;height:100%;}
+.sidebar{background:rgba(10,22,40,.96);border-left:1px solid rgba(200,216,240,.1);display:flex;flex-direction:column;overflow-y:auto;padding:10px;gap:8px;}
+@media(max-width:900px){.sidebar{border-left:none;border-top:1px solid rgba(200,216,240,.1);}}
+.player-card{padding:9px 11px;border-radius:10px;border:1px solid rgba(200,216,240,.15);background:rgba(5,10,20,.6);transition:all .3s;}
+.player-card.active{border-color:var(--green-neon);background:rgba(57,255,143,.05);box-shadow:0 0 12px rgba(57,255,143,.2);}
+.player-card.bankrupt{opacity:.35;filter:grayscale(1);}
+.player-card.me{border-color:var(--fortune-cyan);}
+.pc-header{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.pc-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.pc-name{font-weight:700;font-size:.9rem;flex:1;}
+.pc-money{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--planet-gold);}
+.pc-props{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
+.pc-prop-badge{font-size:.55rem;padding:1px 5px;border-radius:3px;background:rgba(200,216,240,.1);border:1px solid rgba(200,216,240,.2);white-space:nowrap;}
+.pc-status{font-size:.65rem;margin-top:3px;color:rgba(200,216,240,.5);font-family:'Share Tech Mono',monospace;}
+.you-label{font-size:.55rem;color:var(--fortune-cyan);font-family:'Share Tech Mono',monospace;margin-left:4px;}
+.dice-section{padding:11px;background:rgba(5,10,20,.6);border-radius:10px;border:1px solid rgba(200,216,240,.15);text-align:center;}
+.dice-display{font-size:2.8rem;margin:6px 0;}
+.btn-roll{width:100%;padding:11px;background:linear-gradient(135deg,var(--green-neon),#00b86a);border:none;border-radius:8px;color:var(--space-black);font-family:'Orbitron',monospace;font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .3s;}
+.btn-roll:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(57,255,143,.4);}
+.btn-roll:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;}
+.action-log{flex:1;min-height:80px;max-height:180px;overflow-y:auto;padding:9px;background:rgba(5,10,20,.6);border-radius:10px;border:1px solid rgba(200,216,240,.1);}
+.log-entry{font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:2px 0;border-bottom:1px solid rgba(200,216,240,.05);color:rgba(200,216,240,.7);}
+.log-entry:last-child{border-bottom:none;}
+.log-entry.highlight{color:var(--planet-gold);}
+.log-entry.danger{color:var(--red-danger);}
+.log-entry.success{color:var(--green-neon);}
+.waiting-for{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(200,216,240,.5);text-align:center;padding:8px;background:rgba(5,10,20,.4);border-radius:6px;border:1px solid rgba(200,216,240,.1);}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.active{display:flex;}
+.modal-box{background:linear-gradient(135deg,var(--deep-blue),var(--cosmos-blue));border:1px solid rgba(200,216,240,.25);border-radius:16px;padding:26px;width:100%;max-width:440px;text-align:center;animation:modalIn .3s ease-out;}
+@keyframes modalIn{from{transform:scale(.8) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+.modal-icon{font-size:2.8rem;margin-bottom:10px;}
+.modal-title{font-family:'Orbitron',monospace;font-size:1rem;color:var(--planet-gold);margin-bottom:7px;letter-spacing:2px;}
+.modal-text{color:var(--star-silver);font-size:.9rem;line-height:1.5;margin-bottom:18px;}
+.modal-buttons{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.modal-btn{padding:9px 20px;border-radius:8px;font-family:'Orbitron',monospace;font-size:.7rem;font-weight:700;letter-spacing:1px;cursor:pointer;border:none;transition:all .2s;}
+.modal-btn.confirm{background:linear-gradient(135deg,var(--asteroid-orange),var(--planet-gold));color:var(--space-black);}
+.modal-btn.cancel{background:transparent;border:1px solid rgba(200,216,240,.3);color:var(--star-silver);}
+.modal-btn.danger{background:var(--red-danger);color:white;}
+.modal-btn:hover{transform:translateY(-1px);}
+.card-display{width:100%;max-width:280px;margin:0 auto 16px;padding:16px;border-radius:12px;border:2px solid;}
+.card-display.fortune{border-color:var(--fortune-cyan);background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(0,212,255,.02));}
+.card-display.astro{border-color:var(--astro-violet);background:linear-gradient(135deg,rgba(155,89,255,.1),rgba(155,89,255,.02));}
+.card-title{font-family:'Orbitron',monospace;font-size:.65rem;letter-spacing:3px;margin-bottom:8px;}
+.card-body{font-size:.9rem;line-height:1.5;}
+.casino-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:10px 0;}
+.casino-slot{padding:7px 3px;border-radius:5px;border:1px solid rgba(200,216,240,.2);font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:center;}
+.casino-slot.win{border-color:var(--green-neon);color:var(--green-neon);background:rgba(57,255,143,.05);}
+.casino-slot.lose{border-color:var(--red-danger);color:var(--red-danger);background:rgba(255,59,48,.05);}
+.casino-slot.special{border-color:var(--planet-gold);color:var(--planet-gold);background:rgba(245,197,24,.05);}
+.casino-slot.active-slot{box-shadow:0 0 10px var(--planet-gold),inset 0 0 6px rgba(245,197,24,.2);}
+
+/* WINNER */
+#winner{align-items:center;justify-content:center;padding:40px 20px;text-align:center;}
+.winner-trophy{font-size:5rem;animation:trophyPulse 1s ease-in-out infinite;}
+@keyframes trophyPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.winner-title{font-family:'Orbitron',monospace;font-size:clamp(1.4rem,5vw,2.8rem);background:linear-gradient(135deg,var(--planet-gold),var(--asteroid-orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:16px 0 8px;letter-spacing:4px;}
+.winner-name{font-size:1.3rem;color:var(--star-silver);margin-bottom:24px;}
+</style>
 </head>
 <body>
-    <section class="parent">
-        <article class="div1 start">
-            <h2 class="name">Старт</h2>    
-            <div class="price-block">
-                <h3 class="price">250</h3>
-            </div>
-        </article>
-        <article class="div2 planet">
-            <h2 class="name">Меркурий</h2>   
-            <div class="price-block">
-                <h3 class="price">100</h3>
-                <h4 class="tax">20</h4>
-            </div>
-        </article>
-        <article class="div3 insurance">
-            <div class="price-block">
-                <h3 class="price">250</h3>
-                <h4 class="tax">100</h4>
-            </div>
-            <h2 class="name">Страховое агенство</h2>
-        </article>
-        <article class="div4 fortuna">
-            <h2 class="name">Фортуна</h2>    
-        </article>
-        <article class="div5 planet">
-            <h2 class="name">Лея</h2>
-            <div class="price-block">
-                <h3 class="price">150</h3>
-                <h4 class="tax">30</h4>
-            </div>    
-        </article>
-        <article class="div6 planet">
-            <h2 class="name">Гремес</h2>    
-            <div class="price-block">
-                <h3 class="price">200</h3>
-                <h4 class="tax">40</h4>
-            </div>
-        </article>
-        <article class="div7 planet">
-            <h2 class="name">Ариэль</h2> 
-            <div class="price-block">
-                <h3 class="price">300</h3>
-                <h4 class="tax">60</h4>
-            </div>   
-        </article>
-        <article class="div8 casino">
-            <h2 class="name">Казино</h2>  
-            <div class="price-block">
-                <h3 class="price">50</h3>
-            </div>  
-        </article>
-        <article class="div9 blackhole">
-            <h2 class="name">Черная дыра</h2> 
-            <div class="price-block">
-                <h3 class="price">500</h3>
-            </div>   
-        </article>
-        <article class="div10 planet">
-            <h2 class="name">Плутон</h2>  
-            <div class="price-block">
-                <h3 class="price">250</h3>
-            <h4 class="tax">50</h4>
-            </div>
-        </article>
-        <article class="div11 astrologer">
-            <h2 class="name">Астролог</h2>    
-        </article>
-        <article class="div12 planet">
-            <h2 class="name">Цера</h2>    
-            <div class="price-block">
-                <h3 class="price">600</h3>
-            <h4 class="tax">120</h4>
-            </div>
-        </article>
-        <article class="div13 fortuna">
-            <h2 class="name">Фортуна</h2>    
-        </article>
-        <article class="div14 planet">
-            <h2 class="name">Сатурн 3</h2>   
-            <div class="price-block">
-                <h3 class="price">350</h3>
-            <h4 class="tax">70</h4>
-            </div> 
-        </article>
-        <article class="div15 pirates">
-            <h2 class="name">Пираты</h2>    
-        </article>
-        <article class="div16 insurance">
-            <h2 class="name">Страховое агенство</h2>
-            <div class="price-block">
-                <h3 class="price">250</h3>
-                <h4 class="tax">100</h4>
-            </div>
-        </article>
-        <article class="div17 planet">
-            <h2 class="name">Уран</h2>    
-            <div class="price-block">
-                <h3 class="price">50</h3>
-                <h4 class="tax">10</h4>
-            </div>
-        </article>
-        <article class="div18 fortuna">
-            <h2 class="name">Фортуна</h2>    
-        </article>
-        <article class="div19 planet">
-            <h2 class="name">Марс</h2>    
-            <div class="price-block">
-                <h3 class="price">550</h3>
-                <h4 class="tax">110</h4>
-            </div>
-        </article>
-        <article class="div20 blackhole">
-            <h2 class="name">Черная дыра</h2>  
-            <div class="price-block">
-                <h3 class="price">500</h3>
-            </div>  
-        </article>
-        <article class="div21 planet">
-            <h2 class="name">Нептун 5</h2>  
-            <div class="price-block">
-                <h3 class="price">450</h3>
-                <h4 class="tax">90</h4>
-            </div>  
-        </article>
-        <article class="div22 police">
-            <h2 class="name">Полиция</h2>
-            <div class="price-block">
-                <h3 class="price">250</h3>
-            </div>    
-        </article>
-        <article class="div23 planet">
-            <h2 class="name">Фобос</h2>   
-            <div class="price-block">
-                <h3 class="price">700</h3>
-                <h4 class="tax">140</h4>
-            </div> 
-        </article>
-        <article class="div24 planet">
-            <h2 class="name">Титан 4</h2>    
-            <div class="price-block">
-                <h3 class="price">650</h3>
-                <h4 class="tax">130</h4>
-            </div>
-        </article>
-        <article class="div25 astrologer">
-            <h2 class="name">Астролог</h2>    
-        </article>
-        <article class="div26 planet">
-            <h2 class="name">Вега</h2>    
-            <div class="price-block">
-                <h3 class="price">500</h3>
-                <h4 class="tax">100</h4>
-            </div>
-        </article>
-        <article class="div27 planet">
-            <h2 class="name">Луна 2</h2>    
-            <div class="price-block">
-                <h3 class="price">400</h3>
-                <h4 class="tax">80</h4>
-            </div>
-        </article>
-        <article class="div28 fortuna">
-            <h2 class="name">Фортуна</h2>    
-        </article>
-        <div class="div29">
-            <section class="roulette">
-                <article class="circle">SPACE 2000</article>
-                <article class="roulette-point" style="--i:0">
-                    <div class="number">1</div>
-                    <div class="cash">+100</div>
-                </article>
-                <article class="roulette-point" style="--i:1">
-                    <div class="number">2</div>
-                    <div class="cash">-150</div>
-                </article>
-                <article class="roulette-point" style="--i:2">
-                    <div class="number">3</div>
-                    <div class="cash">+150</div>
-                </article>
-                <article class="roulette-point" style="--i:3">
-                    <div class="number">4</div>
-                    <div class="cash">-50</div>
-                </article>
-                <article class="roulette-point" style="--i:4">
-                    <div class="number">5</div>
-                    <div class="cash">+50</div>
-                </article>
-                <article class="roulette-point" style="--i:5">
-                    <div class="number">6</div>
-                    <div class="cash">+200</div>
-                </article>
-                <article class="roulette-point" style="--i:6">
-                    <div class="number">7</div>
-                    <div class="cash">+150</div>
-                </article>
-                <article class="roulette-point" style="--i:7">
-                    <div class="number">8</div>
-                    <div class="cash">-300</div>
-                </article>
-                <article class="roulette-point" style="--i:8">
-                    <div class="number">9</div>
-                    <div class="cash">+400</div>
-                </article>
-                <article class="roulette-point" style="--i:9">
-                    <div class="number">10</div>
-                    <div class="cash">-100</div>
-                </article>
-                <article class="roulette-point" style="--i:10">
-                    <div class="number">11</div>
-                    <div class="cash">+500</div>
-                </article>
-                <article class="roulette-point" style="--i:11">
-                    <div class="number">12</div>
-                    <div class="cash">+200</div>
-                </article>
-            </section>
-            
-        </div>
-    </>
+
+<!-- CONNECTING OVERLAY -->
+<div class="connecting-overlay" id="connecting">
+  <div class="spinner"></div>
+  <div class="connecting-text" id="connecting-text">ПОДКЛЮЧЕНИЕ...</div>
+</div>
+
+<!-- ===== CONFIG SCREEN ===== -->
+<div id="config" class="screen active">
+  <div style="text-align:center;margin-bottom:24px;">
+    <div class="logo-title">КОСМОС 2000</div>
+    <div class="logo-sub">ONLINE MULTIPLAYER · SUPABASE REALTIME</div>
+  </div>
+
+  <!-- Supabase config warning -->
+  <div class="config-card" id="supabase-setup-card" style="margin-bottom:16px;max-width:500px;">
+    <div class="config-warning">
+      ⚙️ <strong>Настройка Supabase</strong><br><br>
+      Вставьте ваши ключи ниже. После первого сохранения они запомнятся.<br><br>
+      Где взять: <code>supabase.com → ваш проект → Settings → API</code>
+    </div>
+    <div class="section-label">Project URL</div>
+    <input class="input-field" id="sb-url" placeholder="https://xxxxxxxxxxxx.supabase.co" autocomplete="off">
+    <div class="section-label">Anon Key (public)</div>
+    <input class="input-field" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs..." autocomplete="off">
+    <button class="btn-primary" onclick="saveSupabaseConfig()">💾 СОХРАНИТЬ И ПОДКЛЮЧИТЬ</button>
+    <div id="sb-status" style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:.7rem;text-align:center;color:rgba(200,216,240,.5);"></div>
+  </div>
+
+  <div class="config-card" id="lobby-card" style="display:none;">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('local')">🖥 ЛОКАЛЬНАЯ</button>
+      <button class="tab" onclick="switchTab('create')">🚀 СОЗДАТЬ</button>
+      <button class="tab" onclick="switchTab('join')">🔗 ВОЙТИ</button>
+    </div>
+
+    <!-- LOCAL -->
+    <div id="tab-local" class="tab-content active">
+      <div class="section-label">Игроки (2–8)</div>
+      <div id="player-setup"></div>
+      <div class="count-row">
+        <button class="count-btn" onclick="removePlayer()">−</button>
+        <span id="count-display" style="line-height:30px;font-family:'Orbitron',monospace;font-size:.85rem;"></span>
+        <button class="count-btn" onclick="addPlayer()">+</button>
+      </div>
+      <button class="btn-primary" onclick="startLocalGame()">🚀 НАЧАТЬ ИГРУ</button>
+    </div>
+
+    <!-- CREATE ROOM -->
+    <div id="tab-create" class="tab-content">
+      <div class="section-label">Ваше имя</div>
+      <input class="input-field" id="host-name" placeholder="Космонавт 1" maxlength="20">
+      <div class="section-label">Игроков максимум</div>
+      <select class="input-field" id="max-players">
+        <option value="2">2</option><option value="3">3</option><option value="4" selected>4</option>
+        <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+      </select>
+      <button class="btn-primary" onclick="createRoom()">🚀 СОЗДАТЬ КОМНАТУ</button>
+      <div class="room-code-box" id="room-code-box" style="display:none;">
+        <div class="room-code" id="room-code-display">----</div>
+        <div class="room-hint">Дайте этот код другим игрокам</div>
+      </div>
+      <div class="waiting-list" id="host-waiting-list"></div>
+      <button class="btn-primary" id="start-online-btn" style="display:none;" onclick="startOnlineGame()">▶ НАЧАТЬ ИГРУ</button>
+    </div>
+
+    <!-- JOIN ROOM -->
+    <div id="tab-join" class="tab-content">
+      <div class="section-label">Ваше имя</div>
+      <input class="input-field" id="join-name" placeholder="Космонавт 2" maxlength="20">
+      <div class="section-label">Код комнаты</div>
+      <input class="input-field" id="join-code" placeholder="ABCD" maxlength="6"
+        style="text-transform:uppercase;letter-spacing:8px;font-family:'Orbitron',monospace;font-size:1.1rem;text-align:center;"
+        oninput="this.value=this.value.toUpperCase()">
+      <button class="btn-primary" onclick="joinRoom()">🔗 ВОЙТИ В КОМНАТУ</button>
+      <div class="waiting-list" id="join-waiting-list"></div>
+      <div id="join-status" style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(200,216,240,.5);text-align:center;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GAME SCREEN ===== -->
+<div id="game" class="screen">
+  <div class="game-topbar">
+    <div class="game-title-small">🚀 КОСМОС 2000</div>
+    <div class="turn-indicator" id="turn-indicator">—</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="online-badge" id="online-badge">● LOCAL</span>
+      <button style="padding:4px 9px;background:transparent;border:1px solid rgba(200,216,240,.2);border-radius:4px;color:rgba(200,216,240,.6);font-size:.65rem;cursor:pointer;" onclick="toggleLang()">🌐</button>
+    </div>
+  </div>
+  <div class="game-layout">
+    <div class="board-container">
+      <div class="board-wrapper">
+        <svg id="board-svg" class="board-svg" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div id="players-panel"></div>
+      <div class="dice-section">
+        <div class="section-label" id="lbl-dice">Бросок кубика</div>
+        <div class="dice-display" id="dice-display">⚀</div>
+        <button class="btn-roll" id="roll-btn" onclick="rollDice()">🎲 БРОСИТЬ</button>
+        <div class="waiting-for" id="waiting-for" style="display:none;margin-top:8px;"></div>
+      </div>
+      <div>
+        <div class="section-label" id="lbl-log">Журнал событий</div>
+        <div class="action-log" id="action-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WINNER ===== -->
+<div id="winner" class="screen">
+  <div class="winner-trophy">🏆</div>
+  <div class="winner-title" id="winner-label">ПОБЕДИТЕЛЬ!</div>
+  <div class="winner-name" id="winner-name"></div>
+  <button class="btn-primary" style="max-width:280px;" onclick="backToLobby()">↩ НОВАЯ ИГРА</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">⭐</div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-text" id="modal-text"></div>
+    <div class="modal-buttons" id="modal-buttons"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// SUPABASE CONFIG
+// ════════════════════════════════════════════════════════
+// ⬇⬇⬇ ВСТАВЬТЕ СЮДА ВАШИ КЛЮЧИ (или введите через UI ниже) ⬇⬇⬇
+const SUPABASE_URL_DEFAULT = '';
+const SUPABASE_KEY_DEFAULT = '';
+// ⬆⬆⬆ ИЛИ оставьте пустыми и введите в интерфейсе ⬆⬆⬆
+
+let SUPABASE_URL = localStorage.getItem('kosmos_sb_url') || SUPABASE_URL_DEFAULT;
+let SUPABASE_KEY = localStorage.getItem('kosmos_sb_key') || SUPABASE_KEY_DEFAULT;
+
+let sbClient = null;
+let realtimeChannel = null;
+let myPlayerId = null;   // index in players array
+let isHost = false;
+let isOnline = false;
+let currentRoomCode = '';
+
+// ════════════════════════════════════════════════════════
+// SUPABASE CLIENT (vanilla JS, no npm needed)
+// ════════════════════════════════════════════════════════
+async function initSupabase(url, key) {
+  SUPABASE_URL = url.replace(/\/$/, '');
+  SUPABASE_KEY = key;
+
+  // Test connection
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/kosmos_rooms?select=id&limit=1`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`HTTP ${res.status}: ${err}`);
+  }
+  return true;
+}
+
+async function sbRead(roomCode) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/kosmos_rooms?id=eq.${roomCode}&select=*`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+  return data[0] || null;
+}
+
+async function sbWrite(roomCode, gameState) {
+  const body = JSON.stringify({ id: roomCode, game_state: gameState, updated_at: new Date().toISOString() });
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/kosmos_rooms?id=eq.${roomCode}`,
+    {
+      method: 'PATCH',
+      headers: {
+        apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json', Prefer: 'return=minimal'
+      },
+      body
+    }
+  );
+  if (!res.ok && res.status !== 204) {
+    // Try INSERT if not exists
+    await fetch(`${SUPABASE_URL}/rest/v1/kosmos_rooms`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json', Prefer: 'return=minimal'
+      },
+      body
+    });
+  }
+}
+
+async function sbCreate(roomCode, gameState) {
+  const body = JSON.stringify({ id: roomCode, game_state: gameState, updated_at: new Date().toISOString() });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/kosmos_rooms`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json', Prefer: 'return=minimal'
+    },
+    body
+  });
+  return res.ok || res.status === 201;
+}
+
+// Realtime via Supabase Realtime v2 (WebSocket)
+function subscribeRealtime(roomCode, callback) {
+  if (realtimeChannel) {
+    realtimeChannel.close();
+    realtimeChannel = null;
+  }
+
+  // Supabase Realtime WebSocket endpoint
+  const wsUrl = SUPABASE_URL.replace('https://', 'wss://').replace('http://', 'ws://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY + '&vsn=1.0.0';
+  const ws = new WebSocket(wsUrl);
+  realtimeChannel = ws;
+
+  const topic = `realtime:public:kosmos_rooms:id=eq.${roomCode}`;
+  let heartbeat;
+
+  ws.onopen = () => {
+    // Join channel
+    ws.send(JSON.stringify({ topic, event: 'phx_join', payload: { config: { broadcast: { self: false }, presence: { key: '' } } }, ref: '1' }));
+    // Heartbeat every 25s
+    heartbeat = setInterval(() => {
+      ws.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: 'hb' }));
+    }, 25000);
+  };
+
+  ws.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      if (msg.event === 'postgres_changes' || msg.event === 'UPDATE' || (msg.payload && msg.payload.record)) {
+        const record = msg.payload.record || (msg.payload.data && msg.payload.data.record);
+        if (record && record.game_state) {
+          callback(record.game_state);
+        }
+      }
+    } catch (_) {}
+  };
+
+  ws.onclose = () => {
+    clearInterval(heartbeat);
+    // Reconnect after 3s if still online
+    if (isOnline) {
+      setTimeout(() => subscribeRealtime(roomCode, callback), 3000);
+    }
+  };
+
+  ws.onerror = () => {};
+}
+
+// Polling fallback (every 1.5s) in addition to realtime
+let pollInterval = null;
+let lastPollVersion = 0;
+
+function startPolling(roomCode) {
+  stopPolling();
+  pollInterval = setInterval(async () => {
+    try {
+      const row = await sbRead(roomCode);
+      if (row && row.game_state) {
+        const gs = row.game_state;
+        if (gs._version && gs._version !== lastPollVersion) {
+          lastPollVersion = gs._version;
+          applyRemoteState(gs);
+        }
+      }
+    } catch (_) {}
+  }, 1500);
+}
+
+function stopPolling() {
+  if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+}
+
+// ════════════════════════════════════════════════════════
+// GAME DATA
+// ════════════════════════════════════════════════════════
+const PLAYER_COLORS = ['#ff6b35','#4fc3f7','#81c784','#ffd54f','#ce93d8','#ff8a65','#80cbc4','#f48fb1'];
+const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+const TEXT = {
+  ru: { roll:'БРОСИТЬ',turn:'Ход',dice:'Бросок кубика',log:'Журнал',buy:'КУПИТЬ',sell_bank:'БАНКУ',winner:'ПОБЕДИТЕЛЬ!',bankrupt:'БАНКРОТ',credit:'КРЕДИТ 1000',ok:'ОК',cancel:'ОТМЕНА',blackhole:'ЧЁРНАЯ ДЫРА',pirates:'ПИРАТЫ',police:'ПОЛИЦИЯ',insurance:'СТРАХОВКА',fortune:'ФОРТУНА',astro:'АСТРОЛОГ',casino:'КАЗИНО',insure_full:'ПОЛНАЯ (250)',insure_half:'ПОЛОВИНА (100)',no_insure:'НЕТ',bankrupt_msg:'Банкрот! Взять кредит?',credit_return:'Кредит 1000 ⬡ — вернуть 1200 за 2 круга.',waiting_for:'Ожидание хода: ' },
+  en: { roll:'ROLL',turn:'Turn',dice:'Dice',log:'Log',buy:'BUY',sell_bank:'TO BANK',winner:'WINNER!',bankrupt:'BANKRUPT',credit:'LOAN 1000',ok:'OK',cancel:'CANCEL',blackhole:'BLACK HOLE',pirates:'PIRATES',police:'POLICE',insurance:'INSURANCE',fortune:'FORTUNE',astro:'ASTROLOGER',casino:'CASINO',insure_full:'FULL (250)',insure_half:'HALF (100)',no_insure:'NO',bankrupt_msg:'Bankrupt! Take loan?',credit_return:'Loan 1000 — repay 1200 in 2 laps.',waiting_for:'Waiting for: ' }
+};
+let lang = 'ru';
+const t = k => TEXT[lang][k] || TEXT.ru[k] || k;
+
+const BOARD_CELLS = [
+  {id:0,type:'start',label:'СТАРТ',emoji:'🚀'},
+  {id:1,type:'planet',label:'МЕРКУРИЙ',emoji:'☿',buy:100,rent:20,color:'#b8b8b8'},
+  {id:2,type:'fortune',label:'ФОРТУНА',emoji:'🌟'},
+  {id:3,type:'planet',label:'ВЕНЕРА',emoji:'♀',buy:150,rent:30,color:'#e8c87a'},
+  {id:4,type:'planet',label:'ЗЕМЛЯ',emoji:'🌍',buy:200,rent:40,color:'#4a9eff'},
+  {id:5,type:'insurance',label:'СТРАХОВКА',emoji:'🛡'},
+  {id:6,type:'planet',label:'МАРС',emoji:'♂',buy:250,rent:50,color:'#e85a2a'},
+  {id:7,type:'astro',label:'АСТРОЛОГ',emoji:'🔮'},
+  {id:8,type:'planet',label:'АСТЕРОИД А-17',emoji:'☄',buy:200,rent:40,color:'#888'},
+  {id:9,type:'planet',label:'АСТЕРОИД А-42',emoji:'🪨',buy:220,rent:45,color:'#888'},
+  {id:10,type:'police',label:'ПОЛИЦИЯ',emoji:'🚔'},
+  {id:11,type:'planet',label:'ЮПИТЕР',emoji:'♃',buy:300,rent:60,color:'#c8a070'},
+  {id:12,type:'fortune',label:'ФОРТУНА',emoji:'🌟'},
+  {id:13,type:'planet',label:'СПУТНИК-1',emoji:'🛰',buy:180,rent:35,color:'#70a0c8'},
+  {id:14,type:'planet',label:'СПУТНИК-2',emoji:'🛸',buy:200,rent:40,color:'#70a0c8'},
+  {id:15,type:'blackhole',label:'ЧЁРНАЯ ДЫРА',emoji:'🌑'},
+  {id:16,type:'planet',label:'САТУРН',emoji:'♄',buy:350,rent:70,color:'#d4a830'},
+  {id:17,type:'astro',label:'АСТРОЛОГ',emoji:'🔮'},
+  {id:18,type:'planet',label:'УРАН',emoji:'♅',buy:400,rent:80,color:'#7ec8d4'},
+  {id:19,type:'planet',label:'НЕПТУН',emoji:'♆',buy:450,rent:90,color:'#3050e0'},
+  {id:20,type:'casino',label:'КАЗИНО',emoji:'🎰'},
+  {id:21,type:'planet',label:'ПЛУТОН',emoji:'♇',buy:500,rent:100,color:'#9080c0'},
+  {id:22,type:'fortune',label:'ФОРТУНА',emoji:'🌟'},
+  {id:23,type:'planet',label:'КОМЕТА А-1',emoji:'☄',buy:280,rent:55,color:'#c0c0c0'},
+  {id:24,type:'amazon',label:'ПИРАТЫ',emoji:'🏴‍☠️'},
+  {id:25,type:'insurance',label:'СТРАХОВКА',emoji:'🛡'},
+  {id:26,type:'planet',label:'КОМЕТА Б-7',emoji:'🌠',buy:320,rent:65,color:'#c0c0c0'},
+  {id:27,type:'astro',label:'АСТРОЛОГ',emoji:'🔮'},
+  {id:28,type:'planet',label:'ЗВЕЗДА АЛЬФА',emoji:'⭐',buy:550,rent:110,color:'#f5c518'},
+  {id:29,type:'planet',label:'ЗВЕЗДА БЕТА',emoji:'🌟',buy:600,rent:120,color:'#f5c518'},
+  {id:30,type:'blackhole',label:'ЧЁРНАЯ ДЫРА',emoji:'🌑'},
+  {id:31,type:'planet',label:'ЗВЕЗДА ГАММА',emoji:'💫',buy:650,rent:130,color:'#ff8c00'},
+  {id:32,type:'fortune',label:'ФОРТУНА',emoji:'🌟'},
+  {id:33,type:'planet',label:'ГАЛАКТИКА М-31',emoji:'🌌',buy:700,rent:140,color:'#ff4500'},
+  {id:34,type:'planet',label:'ГАЛАКТИКА М-51',emoji:'🪐',buy:750,rent:150,color:'#ff4500'},
+  {id:35,type:'police',label:'ПОЛИЦИЯ',emoji:'🚔'},
+  {id:36,type:'planet',label:'ТУМ. ОРЛА',emoji:'🦅',buy:800,rent:160,color:'#9b59ff'},
+  {id:37,type:'astro',label:'АСТРОЛОГ',emoji:'🔮'},
+  {id:38,type:'planet',label:'ТУМ. АНДРОМЕДА',emoji:'🔭',buy:850,rent:170,color:'#9b59ff'},
+  {id:39,type:'planet',label:'КВАЗАР Q-1',emoji:'✨',buy:900,rent:180,color:'#ff1493'},
+];
+
+const FORTUNE_CARDS = [
+  {ru:'Вы нашли космический клад! +400 дублонов',en:'Space treasure! +400',fx:g=>{g.players[g.current].money+=400;addLog('+400 💰','success');}},
+  {ru:'Космический налог: −200 дублонов',en:'Space tax: −200',fx:g=>{g.players[g.current].money-=200;addLog('-200 💸','danger');}},
+  {ru:'Бесплатный перелёт! Вперёд на 5 клеток.',en:'Free flight! +5 cells.',fx:g=>{movePlayer(g,g.current,5);}},
+  {ru:'Солнечная вспышка! Пропустите ход.',en:'Solar flare! Skip turn.',fx:g=>{g.players[g.current].skipTurn=true;addLog('⏭ Пропуск хода','danger');}},
+  {ru:'Межзвёздная лотерея! +600 дублонов',en:'Lottery! +600',fx:g=>{g.players[g.current].money+=600;addLog('+600 💰','success');}},
+  {ru:'Ремонт корабля: −300 дублонов',en:'Ship repair: −300',fx:g=>{g.players[g.current].money-=300;addLog('-300 💸','danger');}},
+  {ru:'Телепортация! Возврат на Старт.',en:'Teleport to Start!',fx:g=>{g.players[g.current].pos=0;addLog('📍 → Старт','highlight');}},
+  {ru:'Межгалактическая премия! +500 дублонов',en:'Galactic bonus! +500',fx:g=>{g.players[g.current].money+=500;addLog('+500 💰','success');}},
+  {ru:'Метеоритный дождь: −150 дублонов',en:'Meteor shower: −150',fx:g=>{g.players[g.current].money-=150;addLog('-150 💸','danger');}},
+  {ru:'Орбитальная станция! +350 дублонов',en:'Orbital station! +350',fx:g=>{g.players[g.current].money+=350;addLog('+350 💰','success');}},
+  {ru:'Штраф за нарушение орбиты: −250',en:'Orbit violation: −250',fx:g=>{g.players[g.current].money-=250;addLog('-250 💸','danger');}},
+  {ru:'Аварийная посадка! Пропуск 2 ходов.',en:'Emergency landing! Skip 2.',fx:g=>{g.players[g.current].skipTurn=2;addLog('⏭⏭ Пропуск 2 ходов','danger');}},
+];
+const ASTRO_CARDS = [
+  {ru:'Звёзды благоволят! Бонусный бросок.',en:'Stars favor you! Bonus roll.',fx:g=>{g.bonusRoll=true;addLog('⭐ Бонусный бросок!','success');}},
+  {ru:'Космическая стража задержала вас. Полиция: −250.',en:'Space guard. Police: −250.',fx:g=>{applyPolice(g);}},
+  {ru:'Предсказание: следующий штраф вдвое меньше.',en:'Prediction: next penalty halved.',fx:g=>{g.players[g.current].astroProtect=true;addLog('🔮 Защита от штрафа','success');}},
+  {ru:'Астролог ведёт вас в Казино (бесплатно)!',en:'Astrologer leads to Casino (free)!',fx:g=>{g.players[g.current].freeCasino=true;g.players[g.current].pos=20;addLog('🎰 → Казино!','highlight');}},
+  {ru:'Туманность судьбы: −400 дублонов.',en:'Fate nebula: −400.',fx:g=>{g.players[g.current].money-=400;addLog('-400 💸','danger');}},
+  {ru:'Удача улыбается: +300 дублонов!',en:'Fortune smiles: +300!',fx:g=>{g.players[g.current].money+=300;addLog('+300 💰','success');}},
+  {ru:'Попутный ветер! Вперёд на 3 клетки.',en:'Tailwind! +3 cells.',fx:g=>{movePlayer(g,g.current,3);}},
+  {ru:'Тёмный прогноз: потеряйте половину денег.',en:'Dark forecast: lose half.',fx:g=>{g.players[g.current].money=Math.floor(g.players[g.current].money/2);addLog('⚫ Половина средств потеряна','danger');}},
+];
+
+// ════════════════════════════════════════════════════════
+// GAME STATE
+// ════════════════════════════════════════════════════════
+let G = null;
+
+function initGameState(players) {
+  const startMoney = players.length === 2 ? 3000 : 2500;
+  return {
+    players: players.map((p,i)=>({
+      id:i, name:p.name, color:p.color, money:startMoney, pos:0,
+      properties:[], skipTurn:false, insured:false, insuredHalf:false,
+      insuredLaps:0, creditLaps:0, hasCredit:false, freeCasino:false,
+      astroProtect:false, laps:0, bankrupt:false,
+    })),
+    current:0, cellOwners:{}, fortuneIdx:0, astroIdx:0,
+    phase:'roll', bonusRoll:false, lastDice:null, log:[],
+    _version: Date.now(), started: true,
+  };
+}
+
+// ════════════════════════════════════════════════════════
+// CONFIG UI
+// ════════════════════════════════════════════════════════
+function saveSupabaseConfig() {
+  const url = document.getElementById('sb-url').value.trim();
+  const key = document.getElementById('sb-key').value.trim();
+  if (!url || !key) { setSbStatus('❌ Введите URL и Key'); return; }
+
+  setSbStatus('🔄 Проверка соединения...');
+  showConnecting('ПРОВЕРКА SUPABASE...');
+
+  initSupabase(url, key).then(() => {
+    localStorage.setItem('kosmos_sb_url', url);
+    localStorage.setItem('kosmos_sb_key', key);
+    SUPABASE_URL = url;
+    SUPABASE_KEY = key;
+    setSbStatus('✅ Подключено!');
+    hideConnecting();
+    document.getElementById('supabase-setup-card').style.display = 'none';
+    document.getElementById('lobby-card').style.display = 'block';
+  }).catch(e => {
+    setSbStatus('❌ Ошибка: ' + e.message);
+    hideConnecting();
+  });
+}
+
+function setSbStatus(txt) { document.getElementById('sb-status').textContent = txt; }
+
+// ════════════════════════════════════════════════════════
+// LOBBY
+// ════════════════════════════════════════════════════════
+let localPlayers = [
+  {name:'Игрок 1',color:PLAYER_COLORS[0]},
+  {name:'Игрок 2',color:PLAYER_COLORS[1]},
+];
+
+function renderPlayerSetup() {
+  document.getElementById('player-setup').innerHTML = localPlayers.map((p,i)=>`
+    <div class="player-row">
+      <div class="player-color-dot" style="background:${p.color}"></div>
+      <input class="player-name-input" value="${p.name}" oninput="localPlayers[${i}].name=this.value" maxlength="16">
+    </div>`).join('');
+  document.getElementById('count-display').textContent = localPlayers.length + ' игр.';
+}
+
+function addPlayer() { if(localPlayers.length<8){localPlayers.push({name:`Игрок ${localPlayers.length+1}`,color:PLAYER_COLORS[localPlayers.length]});renderPlayerSetup();} }
+function removePlayer() { if(localPlayers.length>2){localPlayers.pop();renderPlayerSetup();} }
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['local','create','join'][i]===tab));
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════
+// ONLINE ROOM MANAGEMENT
+// ════════════════════════════════════════════════════════
+async function createRoom() {
+  const hostName = document.getElementById('host-name').value.trim() || 'Хост';
+  const maxP = parseInt(document.getElementById('max-players').value);
+  const code = Math.random().toString(36).substring(2,8).toUpperCase();
+
+  showConnecting('СОЗДАНИЕ КОМНАТЫ...');
+
+  const lobbyState = {
+    started: false,
+    players: [{name:hostName,color:PLAYER_COLORS[0]}],
+    maxPlayers: maxP,
+    _version: Date.now(),
+  };
+
+  try {
+    await sbCreate(code, lobbyState);
+    currentRoomCode = code;
+    isHost = true;
+    myPlayerId = 0;
+    isOnline = true;
+
+    document.getElementById('room-code-display').textContent = code;
+    document.getElementById('room-code-box').style.display = 'block';
+    document.getElementById('start-online-btn').style.display = 'none';
+    renderHostWaiting(lobbyState);
+    hideConnecting();
+
+    // Poll for new players joining
+    let pollV = lobbyState._version;
+    pollInterval = setInterval(async () => {
+      const row = await sbRead(code);
+      if (!row) return;
+      const gs = row.game_state;
+      if (gs._version !== pollV) {
+        pollV = gs._version;
+        if (gs.started) {
+          stopPolling();
+          G = gs;
+          launchGame();
+          return;
+        }
+        renderHostWaiting(gs);
+        if (gs.players.length >= 2) {
+          document.getElementById('start-online-btn').style.display = 'block';
+        }
+      }
+    }, 1500);
+  } catch(e) {
+    hideConnecting();
+    alert('Ошибка создания комнаты: ' + e.message);
+  }
+}
+
+function renderHostWaiting(gs) {
+  const el = document.getElementById('host-waiting-list');
+  el.innerHTML = '<div class="section-label" style="margin-top:12px;">Игроки в комнате</div>' +
+    gs.players.map(p=>`<div class="waiting-player"><span class="status-dot"></span><div style="width:11px;height:11px;border-radius:50%;background:${p.color}"></div>${p.name}</div>`).join('');
+}
+
+async function joinRoom() {
+  const code = document.getElementById('join-code').value.toUpperCase().trim();
+  const name = document.getElementById('join-name').value.trim() || 'Гость';
+  if (code.length < 4) { alert('Введите код комнаты'); return; }
+
+  showConnecting('ПОИСК КОМНАТЫ...');
+
+  try {
+    const row = await sbRead(code);
+    if (!row) { hideConnecting(); alert('Комната не найдена'); return; }
+    const gs = row.game_state;
+    if (gs.started) { hideConnecting(); alert('Игра уже началась'); return; }
+    if (gs.players.length >= gs.maxPlayers) { hideConnecting(); alert('Комната заполнена'); return; }
+
+    const colorIdx = gs.players.length;
+    gs.players.push({name, color:PLAYER_COLORS[colorIdx]});
+    myPlayerId = colorIdx;
+    gs._version = Date.now();
+    await sbWrite(code, gs);
+
+    currentRoomCode = code;
+    isHost = false;
+    isOnline = true;
+    hideConnecting();
+
+    document.getElementById('join-status').textContent = '✅ Вы в комнате! Ждём хоста...';
+    document.getElementById('join-waiting-list').innerHTML =
+      gs.players.map(p=>`<div class="waiting-player"><span class="status-dot"></span><div style="width:11px;height:11px;border-radius:50%;background:${p.color}"></div>${p.name}</div>`).join('');
+
+    // Poll until game starts
+    let pollV = gs._version;
+    pollInterval = setInterval(async () => {
+      const r = await sbRead(code);
+      if (!r) return;
+      const s = r.game_state;
+      if (s._version !== pollV) {
+        pollV = s._version;
+        if (s.started) {
+          stopPolling();
+          G = s;
+          launchGame();
+        } else {
+          document.getElementById('join-waiting-list').innerHTML =
+            s.players.map(p=>`<div class="waiting-player"><span class="status-dot"></span><div style="width:11px;height:11px;border-radius:50%;background:${p.color}"></div>${p.name}</div>`).join('');
+        }
+      }
+    }, 1500);
+  } catch(e) {
+    hideConnecting();
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+async function startOnlineGame() {
+  const row = await sbRead(currentRoomCode);
+  if (!row) return;
+  const lobby = row.game_state;
+  G = initGameState(lobby.players);
+  G._version = Date.now();
+  await sbWrite(currentRoomCode, G);
+}
+
+function launchGame() {
+  stopPolling();
+  document.getElementById('online-badge').textContent = '● ONLINE';
+  document.getElementById('online-badge').style.color = 'var(--green-neon)';
+  showScreen('game');
+  renderBoard();
+  renderSidebar();
+  addLog('🚀 Игра началась!','highlight');
+
+  // Subscribe realtime + polling
+  subscribeRealtime(currentRoomCode, applyRemoteState);
+  startPolling(currentRoomCode);
+}
+
+function applyRemoteState(gs) {
+  if (!G) return;
+  if (gs._version <= G._version) return;  // ignore older states
+  const wasMyTurn = G.players[G.current] && myPlayerId === G.current;
+  G = gs;
+  lastPollVersion = gs._version;
+  renderSidebar();
+  updateBoardState();
+  // Sync log
+  if (gs.log && gs.log.length > G.log.length) {
+    const newEntries = gs.log.slice(G.log.length || 0);
+    newEntries.forEach(msg => addLogRaw(msg));
+  }
+}
+
+async function pushState() {
+  if (!isOnline || !currentRoomCode) return;
+  G._version = Date.now();
+  await sbWrite(currentRoomCode, G);
+}
+
+// ════════════════════════════════════════════════════════
+// LOCAL GAME
+// ════════════════════════════════════════════════════════
+function startLocalGame() {
+  isOnline = false;
+  myPlayerId = null;
+  G = initGameState(localPlayers.map((p,i)=>({name:p.name||`Игрок ${i+1}`,color:p.color})));
+  showScreen('game');
+  renderBoard();
+  renderSidebar();
+  addLog('🚀 Игра началась!','highlight');
+}
+
+// ════════════════════════════════════════════════════════
+// BOARD RENDERING
+// ════════════════════════════════════════════════════════
+const BOARD_SIZE=800, CELLS_PER_SIDE=10, CORNER=80, INNER=800-2*80;
+
+function getCellRect(id) {
+  const side=Math.floor(id/CELLS_PER_SIDE), idx=id%CELLS_PER_SIDE;
+  const cw=INNER/CELLS_PER_SIDE, ch=CORNER;
+  if(side===0) return {x:CORNER+idx*cw,y:BOARD_SIZE-CORNER,w:cw,h:ch};
+  if(side===1) return {x:BOARD_SIZE-CORNER,y:BOARD_SIZE-CORNER-(idx+1)*cw,w:ch,h:cw};
+  if(side===2) return {x:BOARD_SIZE-CORNER-(idx+1)*cw,y:0,w:cw,h:ch};
+  return {x:0,y:CORNER+idx*cw,w:ch,h:cw};
+}
+
+function cellFill(cell) {
+  const m={'planet':cell.color+'22','casino':'#ff69b422','fortune':'#00d4ff22','astro':'#9b59ff22','blackhole':'#11111166','police':'#ff3b3022','amazon':'#cc220022','insurance':'#20b2aa22','start':'#f5c51822'};
+  return m[cell.type]||'#ffffff11';
+}
+function cellStroke(cell) {
+  const m={'planet':cell.color,'casino':'#ff69b4','fortune':'#00d4ff','astro':'#9b59ff','blackhole':'#555','police':'#ff3b30','amazon':'#cc2200','insurance':'#20b2aa','start':'#f5c518'};
+  return m[cell.type]||'#ffffff33';
+}
+
+function renderBoard() {
+  const svg=document.getElementById('board-svg');
+  let h=`<rect width="800" height="800" fill="#050a14" rx="12"/>`;
+  for(let i=0;i<80;i++){const x=(Math.random()*798).toFixed(1),y=(Math.random()*798).toFixed(1),r=(Math.random()*1.5+.5).toFixed(1),op=(Math.random()*.6+.2).toFixed(2);h+=`<circle cx="${x}" cy="${y}" r="${r}" fill="white" opacity="${op}"/>`;}
+  h+=`<defs><radialGradient id="sg" cx="50%" cy="50%"><stop offset="0%" stop-color="#ff9500"/><stop offset="60%" stop-color="#e85a00"/><stop offset="100%" stop-color="#5a1500"/></radialGradient></defs>`;
+  for(let r=130;r<=320;r+=38)h+=`<circle cx="400" cy="400" r="${r}" fill="none" stroke="rgba(200,216,240,0.04)" stroke-width="1"/>`;
+  h+=`<circle cx="400" cy="400" r="110" fill="#1a0d00" stroke="#f5c518" stroke-width="2" opacity=".9"/>
+    <circle cx="400" cy="400" r="90" fill="url(#sg)" opacity=".95"/>
+    <text x="400" y="390" text-anchor="middle" dominant-baseline="middle" font-family="Orbitron,monospace" font-size="13" fill="#f5c518" font-weight="700">КОСМОС</text>
+    <text x="400" y="412" text-anchor="middle" dominant-baseline="middle" font-family="Orbitron,monospace" font-size="17" fill="#e87d2a" font-weight="900">2000</text>`;
+
+  for(let id=0;id<BOARD_CELLS.length;id++){
+    const cell=BOARD_CELLS[id],r=getCellRect(id),side=Math.floor(id/CELLS_PER_SIDE);
+    const cx=r.x+r.w/2,cy=r.y+r.h/2;
+    const rot=side===1?-90:side===2?180:side===3?90:0;
+    const tf=`rotate(${rot},${cx},${cy})`;
+    h+=`<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${cellFill(cell)}" stroke="${cellStroke(cell)}" stroke-width="1.2" rx="2"/>`;
+    h+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" dominant-baseline="middle" transform="${tf}" font-size="13">${cell.emoji}</text>`;
+    const sl=cell.label.split(' ')[0],fs=sl.length>7?5.5:6.5;
+    h+=`<text x="${cx}" y="${cy+9}" text-anchor="middle" dominant-baseline="middle" transform="${tf}" font-family="Rajdhani,sans-serif" font-size="${fs}" fill="#c8d8f0" font-weight="600">${sl}</text>`;
+    if(cell.type==='planet')h+=`<text x="${cx}" y="${cy+18}" text-anchor="middle" dominant-baseline="middle" transform="${tf}" font-family="Share Tech Mono,monospace" font-size="5" fill="${cellStroke(cell)}">${cell.buy}/${cell.rent}</text>`;
+    h+=`<g id="owner-${id}"></g><g id="tokens-${id}"></g>`;
+  }
+  svg.innerHTML=h;
+  updateBoardState();
+}
+
+function updateBoardState() {
+  if(!G)return;
+  // Owners
+  for(let id=0;id<BOARD_CELLS.length;id++){
+    const el=document.getElementById('owner-'+id);
+    if(!el)continue;
+    const cell=BOARD_CELLS[id];
+    if(cell.type!=='planet'){el.innerHTML='';continue;}
+    const ownerId=G.cellOwners[id];
+    if(ownerId===undefined){el.innerHTML='';continue;}
+    const r=getCellRect(id),side=Math.floor(id/CELLS_PER_SIDE);
+    let dx=r.x+4,dy=r.y+4;
+    if(side===1){dx=r.x+r.w-8;dy=r.y+4;}
+    if(side===2){dx=r.x+r.w-8;dy=r.y+r.h-8;}
+    if(side===3){dx=r.x+4;dy=r.y+r.h-8;}
+    const color=ownerId==='bank'?'#888':G.players[ownerId].color;
+    const label=ownerId==='bank'?'Б':'';
+    el.innerHTML=`<circle cx="${dx}" cy="${dy}" r="5" fill="${color}" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>${label?`<text x="${dx}" y="${dy}" text-anchor="middle" dominant-baseline="middle" font-size="5" fill="white">${label}</text>`:''}`;
+  }
+  // Tokens
+  const byPos={};
+  G.players.forEach((p,i)=>{if(!p.bankrupt){if(!byPos[p.pos])byPos[p.pos]=[];byPos[p.pos].push(i);}});
+  for(let id=0;id<BOARD_CELLS.length;id++){const el=document.getElementById('tokens-'+id);if(el)el.innerHTML='';}
+  Object.entries(byPos).forEach(([pos,pids])=>{
+    const id=parseInt(pos),el=document.getElementById('tokens-'+id);
+    if(!el)return;
+    const r=getCellRect(id),cx=r.x+r.w/2,cy=r.y+r.h/2;
+    pids.forEach((pid,tidx)=>{
+      const p=G.players[pid],angle=(tidx/pids.length)*Math.PI*2,rad=pids.length>1?7:0;
+      const tx=cx+Math.cos(angle)*rad,ty=cy+Math.sin(angle)*rad;
+      el.innerHTML+=`<circle cx="${tx}" cy="${ty}" r="6" fill="${p.color}" stroke="white" stroke-width="1.5"/><text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="white" font-weight="bold">${pid+1}</text>`;
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// SIDEBAR
+// ════════════════════════════════════════════════════════
+function renderSidebar() {
+  if(!G)return;
+  const pp=document.getElementById('players-panel');
+  pp.innerHTML=G.players.map((p,i)=>{
+    const isActive=i===G.current&&!p.bankrupt;
+    const isMe=isOnline&&i===myPlayerId;
+    const props=p.properties.map(cid=>{const c=BOARD_CELLS[cid];return`<span class="pc-prop-badge" style="border-color:${c.color};color:${c.color}">${c.emoji}</span>`;}).join('');
+    const status=[];
+    if(p.insured)status.push('🛡full');if(p.insuredHalf)status.push('🛡half');if(p.hasCredit)status.push('💳');if(p.skipTurn)status.push('⏭');
+    return`<div class="player-card ${isActive?'active':''} ${p.bankrupt?'bankrupt':''} ${isMe?'me':''}">
+      <div class="pc-header">
+        <div class="pc-dot" style="background:${p.color}"></div>
+        <div class="pc-name">${p.name}${isMe?'<span class="you-label">(ВЫ)</span>':''}</div>
+        <div class="pc-money">⬡ ${p.money}</div>
+      </div>
+      ${props?`<div class="pc-props">${props}</div>`:''}
+      ${status.length?`<div class="pc-status">${status.join(' · ')}</div>`:''}
+      ${p.bankrupt?`<div class="pc-status" style="color:#ff3b30">💀 ${t('bankrupt')}</div>`:''}
+    </div>`;
+  }).join('');
+
+  const cur=G.players[G.current];
+  document.getElementById('turn-indicator').textContent=`${t('turn')}: ${cur.name}`;
+  document.getElementById('lbl-dice').textContent=t('dice');
+  document.getElementById('lbl-log').textContent=t('log');
+
+  const isMyTurn = !isOnline || myPlayerId === G.current;
+  const rollBtn=document.getElementById('roll-btn');
+  const waitEl=document.getElementById('waiting-for');
+  rollBtn.textContent='🎲 '+t('roll');
+  rollBtn.disabled=G.phase!=='roll'||cur.bankrupt||!isMyTurn;
+
+  if(isOnline && !isMyTurn && G.phase==='roll'){
+    waitEl.style.display='block';
+    waitEl.textContent=t('waiting_for')+cur.name+'...';
+  } else {
+    waitEl.style.display='none';
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// GAME LOGIC
+// ════════════════════════════════════════════════════════
+function rollDice() {
+  if(!G||G.phase!=='roll')return;
+  const cur=G.players[G.current];
+  if(cur.bankrupt){endTurn();return;}
+  if(isOnline&&myPlayerId!==G.current)return;
+
+  if(cur.skipTurn){
+    if(typeof cur.skipTurn==='number'&&cur.skipTurn>1)cur.skipTurn--;else cur.skipTurn=false;
+    addLog(`⏭ ${cur.name} пропускает ход`);
+    endTurn();return;
+  }
+  const roll=Math.floor(Math.random()*6)+1;
+  G.lastDice=roll;
+  document.getElementById('dice-display').textContent=DICE_FACES[roll-1];
+  addLog(`🎲 ${cur.name} бросил ${roll}`,'highlight');
+  G.phase='action';
+  document.getElementById('roll-btn').disabled=true;
+  movePlayer(G,G.current,roll,true);
+}
+
+function movePlayer(G,pid,steps,animate) {
+  const player=G.players[pid];
+  const oldPos=player.pos;
+  const newPos=(oldPos+steps)%BOARD_CELLS.length;
+  if(newPos<oldPos||(newPos===0&&steps>0)){
+    player.laps++;player.money+=250;
+    addLog(`🚀 ${player.name} прошёл Старт! +250 ⬡`,'success');
+    if(player.hasCredit){
+      player.creditLaps=(player.creditLaps||0)+1;
+      if(player.creditLaps>=2){
+        if(player.money>=1200){player.money-=1200;player.hasCredit=false;player.creditLaps=0;addLog(`💳 ${player.name} вернул кредит`,'success');}
+        else{addLog(`💳 ${player.name} не вернул кредит — БАНКРОТ!`,'danger');declareBankrupt(pid);return;}
+      }
+    }
+    if(player.insuredLaps>0){player.insuredLaps--;if(player.insuredLaps===0){player.insured=false;player.insuredHalf=false;addLog(`🛡 Страховка ${player.name} истекла`);}}
+  }
+  player.pos=newPos;
+  updateBoardState();
+  setTimeout(()=>landOnCell(G,pid,BOARD_CELLS[newPos]),animate?350:0);
+}
+
+function landOnCell(G,pid,cell) {
+  const player=G.players[pid];
+  addLog(`📍 ${player.name} → ${cell.label}`);
+  const actions={
+    start:()=>endTurn(),
+    planet:()=>handlePlanet(G,pid,cell),
+    fortune:()=>handleFortune(G,pid),
+    astro:()=>handleAstro(G,pid),
+    casino:()=>handleCasino(G,pid),
+    blackhole:()=>handleBlackhole(G,pid),
+    amazon:()=>handlePirates(G,pid),
+    police:()=>applyPolice(G),
+    insurance:()=>handleInsurance(G,pid),
+  };
+  (actions[cell.type]||endTurn)();
+}
+
+function handlePlanet(G,pid,cell) {
+  const player=G.players[pid];
+  const ownerId=G.cellOwners[cell.id];
+  if(ownerId===undefined){
+    showModal({icon:cell.emoji,title:cell.label,text:`Свободная планета! Купить?\nЦена: ${cell.buy} ⬡  Рента: ${cell.rent} ⬡`,buttons:[
+      {label:`💰 ${t('buy')} (${cell.buy})`,cls:'confirm',action:()=>{
+        if(player.money>=cell.buy){player.money-=cell.buy;player.properties.push(cell.id);G.cellOwners[cell.id]=pid;addLog(`🪐 ${player.name} купил ${cell.label}`,'success');}
+        else addLog('💸 Недостаточно средств','danger');
+        closeModal();renderSidebar();updateBoardState();pushState();endTurn();
+      }},
+      {label:`🏦 ${t('sell_bank')}`,cls:'cancel',action:()=>{G.cellOwners[cell.id]='bank';addLog(`🏦 ${cell.label} → Банк`);closeModal();updateBoardState();pushState();endTurn();}},
+    ]});
+  } else if(ownerId==='bank'){
+    player.money-=cell.rent;addLog(`${t('rent_paid')||'Рента'} → Банк: ${cell.rent} ⬡`,'danger');
+    checkBankrupt(G,pid);renderSidebar();
+    if(player.money>=(cell.buy+100)){
+      showModal({icon:'🏦',title:'Планета Банка',text:`Выкупить за ${cell.buy+100} ⬡?`,buttons:[
+        {label:`💰 Выкупить`,cls:'confirm',action:()=>{player.money-=(cell.buy+100);player.properties.push(cell.id);G.cellOwners[cell.id]=pid;addLog(`🪐 Выкупил ${cell.label}`,'success');closeModal();renderSidebar();updateBoardState();pushState();endTurn();}},
+        {label:t('cancel'),cls:'cancel',action:()=>{closeModal();pushState();endTurn();}},
+      ]});
+    } else { pushState(); endTurn(); }
+  } else if(ownerId===pid){
+    addLog('🏠 Своя планета');endTurn();
+  } else {
+    const owner=G.players[ownerId];
+    player.money-=cell.rent;owner.money+=cell.rent;
+    addLog(`Рента → ${owner.name}: ${cell.rent} ⬡`,'danger');
+    checkBankrupt(G,pid);renderSidebar();pushState();endTurn();
+  }
+}
+
+function handleFortune(G,pid) {
+  const card=FORTUNE_CARDS[G.fortuneIdx%FORTUNE_CARDS.length];G.fortuneIdx++;
+  showModal({icon:'🌟',title:'★ '+t('fortune')+' ★',cardType:'fortune',cardText:lang==='ru'?card.ru:card.en,buttons:[
+    {label:t('ok'),cls:'confirm',action:()=>{closeModal();card.fx(G);renderSidebar();updateBoardState();pushState();if(!G.bonusRoll)endTurn();else{G.bonusRoll=false;G.phase='roll';renderSidebar();}}}
+  ]});
+}
+
+function handleAstro(G,pid) {
+  const card=ASTRO_CARDS[G.astroIdx%ASTRO_CARDS.length];G.astroIdx++;
+  showModal({icon:'🔮',title:'✦ '+t('astro')+' ✦',cardType:'astro',cardText:lang==='ru'?card.ru:card.en,buttons:[
+    {label:t('ok'),cls:'confirm',action:()=>{closeModal();card.fx(G);renderSidebar();updateBoardState();pushState();if(!G.bonusRoll)endTurn();else{G.bonusRoll=false;G.phase='roll';renderSidebar();}}}
+  ]});
+}
+
+function handleCasino(G,pid) {
+  const player=G.players[pid];
+  if(!player.freeCasino){player.money-=50;addLog('🎰 Вход: −50 ⬡','danger');}else player.freeCasino=false;
+  const slots=[{l:'+200',a:200,t:'win'},{l:'−100',a:-100,t:'lose'},{l:'+400',a:400,t:'win'},{l:'−200',a:-200,t:'lose'},{l:'+100',a:100,t:'win'},{l:'★',a:null,t:'special'}];
+  const slots2=[{l:'+300',a:300,t:'win'},{l:'−300',a:-300,t:'lose'},{l:'+600',a:600,t:'win'},{l:'−150',a:-150,t:'lose'},{l:'+500',a:500,t:'win'},{l:'−400',a:-400,t:'lose'}];
+  const r1=Math.floor(Math.random()*6),res=slots[r1];
+  let extra='';
+  if(res.t==='special'){
+    const r2=Math.floor(Math.random()*6),res2=slots2[r2];
+    if(res2.a)player.money+=res2.a;
+    addLog(`🎰 Казино повтор: ${res2.a>0?'+':''}${res2.a} ⬡`,res2.a>0?'success':'danger');
+    extra=`<div style="margin:8px 0;font-size:.75rem;color:var(--planet-gold)">★ Повторный бросок: ${r2+1}</div><div class="casino-grid">${slots2.map((s,i)=>`<div class="casino-slot ${s.t} ${i===r2?'active-slot':''}">${s.l}</div>`).join('')}</div>`;
+  } else if(res.a){player.money+=res.a;addLog(`🎰 Казино: ${res.a>0?'+':''}${res.a} ⬡`,res.a>0?'success':'danger');}
+  const grid=`<div style="margin-bottom:10px;font-size:.8rem">Бросок: <span style="color:var(--planet-gold);font-family:'Orbitron',monospace">${r1+1}</span></div><div class="casino-grid">${slots.map((s,i)=>`<div class="casino-slot ${s.t} ${i===r1?'active-slot':''}">${s.l}</div>`).join('')}</div>${extra}`;
+  showModal({icon:'🎰',title:t('casino'),rawHtml:grid,buttons:[{label:t('ok'),cls:'confirm',action:()=>{closeModal();checkBankrupt(G,pid);renderSidebar();pushState();endTurn();}}]});
+}
+
+function handleBlackhole(G,pid) {
+  const player=G.players[pid];
+  let pen=500;
+  if(player.insured){pen=0;addLog('🛡 Страховка покрыла ЧД!','success');}
+  else if(player.insuredHalf){pen=250;addLog('🛡 Страховка 50%','success');}
+  player.money-=pen;addLog(`🌑 Чёрная дыра! −${pen} ⬡`,'danger');
+  showModal({icon:'🌑',title:t('blackhole'),text:`Штраф: −${pen} ⬡`,buttons:[{label:t('ok'),cls:'danger',action:()=>{closeModal();checkBankrupt(G,pid);renderSidebar();pushState();endTurn();}}]});
+}
+
+function handlePirates(G,pid) {
+  const player=G.players[pid];
+  let lost=player.money;
+  if(player.insured){lost=0;addLog('🛡 Страховка спасла от пиратов!','success');}
+  else if(player.insuredHalf){lost=Math.floor(player.money/2);addLog('🛡 Страховка 50%','success');}
+  player.money-=lost;addLog(`🏴‍☠️ Пираты! −${lost} ⬡`,'danger');
+  showModal({icon:'🏴‍☠️',title:t('pirates'),text:`Потеряно: ${lost} ⬡`,buttons:[{label:t('ok'),cls:'danger',action:()=>{closeModal();checkBankrupt(G,pid);renderSidebar();pushState();endTurn();}}]});
+}
+
+function applyPolice(G) {
+  const pid=G.current,player=G.players[pid];
+  let pen=250;
+  if(player.insured){pen=0;addLog('🛡 Страховка покрыла полицию!','success');}
+  else if(player.insuredHalf)pen=125;
+  player.money-=pen;addLog(`🚔 Полиция! −${pen} ⬡`,'danger');
+  showModal({icon:'🚔',title:t('police'),text:`Штраф: −${pen} ⬡`,buttons:[{label:t('ok'),cls:'danger',action:()=>{closeModal();checkBankrupt(G,pid);renderSidebar();pushState();endTurn();}}]});
+}
+
+function handleInsurance(G,pid) {
+  const player=G.players[pid];
+  showModal({icon:'🛡',title:t('insurance'),text:'Застраховаться?\n\nПолная (250 ⬡): полное покрытие на 1 круг.\nПоловинная (100 ⬡): 50% покрытие.',buttons:[
+    {label:t('insure_full'),cls:'confirm',action:()=>{if(player.money>=250){player.money-=250;player.insured=true;player.insuredHalf=false;player.insuredLaps=1;addLog(`🛡 ${player.name} застрахован`,'success');}closeModal();renderSidebar();pushState();endTurn();}},
+    {label:t('insure_half'),cls:'confirm',action:()=>{if(player.money>=100){player.money-=100;player.insured=false;player.insuredHalf=true;player.insuredLaps=1;addLog(`🛡 ${player.name} застрахован 50%`,'success');}closeModal();renderSidebar();pushState();endTurn();}},
+    {label:t('no_insure'),cls:'cancel',action:()=>{closeModal();pushState();endTurn();}},
+  ]});
+}
+
+function checkBankrupt(G,pid) {
+  const player=G.players[pid];
+  if(player.money<0&&!player.bankrupt){
+    if(!player.hasCredit)offerCredit(G,pid);else declareBankrupt(pid);
+  }
+}
+
+function offerCredit(G,pid) {
+  const player=G.players[pid];
+  showModal({icon:'💳',title:t('bankrupt'),text:`${t('bankrupt_msg')}\n\n${t('credit_return')}`,buttons:[
+    {label:'💳 '+t('credit'),cls:'confirm',action:()=>{player.money+=1000;player.hasCredit=true;player.creditLaps=0;player.pos=0;addLog(`💳 ${player.name} взял кредит`,'highlight');closeModal();renderSidebar();updateBoardState();pushState();endTurn();}},
+    {label:'💀 Выйти',cls:'danger',action:()=>{declareBankrupt(pid);closeModal();renderSidebar();pushState();endTurn();}},
+  ]});
+}
+
+function declareBankrupt(pid) {
+  const player=G.players[pid];player.bankrupt=true;
+  player.properties.forEach(cid=>{G.cellOwners[cid]='bank';});player.properties=[];
+  addLog(`💀 ${player.name} — БАНКРОТ!`,'danger');
+  renderSidebar();updateBoardState();checkWinner();
+}
+
+function checkWinner() {
+  const active=G.players.filter(p=>!p.bankrupt);
+  if(active.length===1){pushState();showWinner(active[0]);}
+}
+
+function showWinner(player) {
+  document.getElementById('winner-label').textContent=t('winner');
+  document.getElementById('winner-name').textContent=`${player.name}  ⬡ ${player.money}`;
+  showScreen('winner');
+}
+
+function endTurn() {
+  if(!G)return;checkWinner();if(!G)return;
+  G.phase='roll';
+  let next=(G.current+1)%G.players.length,tries=0;
+  while(G.players[next].bankrupt&&tries<G.players.length){next=(next+1)%G.players.length;tries++;}
+  G.current=next;
+  renderSidebar();updateBoardState();
+  if(isOnline)pushState();
+}
+
+// ════════════════════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════════════════════
+function showModal({icon,title,text,cardType,cardText,rawHtml,buttons}) {
+  document.getElementById('modal-icon').textContent=icon||'';
+  document.getElementById('modal-title').textContent=title||'';
+  let html='';
+  if(rawHtml)html=rawHtml;
+  else if(cardText)html=`<div class="card-display ${cardType}"><div class="card-title" style="color:${cardType==='fortune'?'var(--fortune-cyan)':'var(--astro-violet)'}">${cardType==='fortune'?'✦ ФОРТУНА ✦':'✦ АСТРОЛОГ ✦'}</div><div class="card-body">${cardText}</div></div>`;
+  else if(text)html=text.split('\n').map(l=>`<div>${l}</div>`).join('');
+  document.getElementById('modal-text').innerHTML=html;
+  document.getElementById('modal-buttons').innerHTML=buttons.map((b,i)=>`<button class="modal-btn ${b.cls}" onclick="window._mb[${i}]()">${b.label}</button>`).join('');
+  window._mb=buttons.map(b=>b.action);
+  document.getElementById('modal').classList.add('active');
+  if(G)G.phase='modal';
+}
+function closeModal() { document.getElementById('modal').classList.remove('active'); if(G)G.phase='action'; }
+
+// ════════════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════════════
+function addLog(msg,type) {
+  addLogRaw(msg,type);
+  if(G)G.log.push(msg);
+}
+function addLogRaw(msg,type) {
+  const el=document.getElementById('action-log');if(!el)return;
+  const e=document.createElement('div');e.className='log-entry'+(type?' '+type:'');e.textContent=msg;
+  el.appendChild(e);el.scrollTop=el.scrollHeight;
+}
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active'); }
+function backToLobby() { isOnline=false;stopPolling();if(realtimeChannel)realtimeChannel.close();G=null;showScreen('config'); }
+function toggleLang() { lang=lang==='ru'?'en':'ru';if(G)renderSidebar(); }
+function showConnecting(txt) { document.getElementById('connecting-text').textContent=txt;document.getElementById('connecting').classList.add('active'); }
+function hideConnecting() { document.getElementById('connecting').classList.remove('active'); }
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+if(SUPABASE_URL&&SUPABASE_KEY){
+  document.getElementById('sb-url').value=SUPABASE_URL;
+  document.getElementById('sb-key').value=SUPABASE_KEY;
+  initSupabase(SUPABASE_URL,SUPABASE_KEY).then(()=>{
+    document.getElementById('supabase-setup-card').style.display='none';
+    document.getElementById('lobby-card').style.display='block';
+  }).catch(()=>{});
+}
+renderPlayerSetup();
+</script>
 </body>
 </html>
